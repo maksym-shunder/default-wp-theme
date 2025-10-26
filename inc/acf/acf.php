@@ -1,7 +1,5 @@
 <?php
 
-if (!defined('ABSPATH')) exit;
-
 //check if acf is activated
 if (!class_exists('ACF')) return;
 

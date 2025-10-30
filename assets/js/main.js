@@ -64,12 +64,26 @@
 		})
 
 		// global scripts
+		// arrows for header menu
 		document.querySelectorAll('.header .menu-item-has-children').forEach(item => {
 			const arrow = document.createElement('span')
 			arrow.classList.add('arrow')
 			arrow.setAttribute('data-action', 'toggleSubmenu')
 
 			item.append(arrow)
+		})
+
+		// add target="_blank" to all external links
+		const links = document.querySelectorAll('a[href]')
+		const currentHost = window.location.hostname
+
+		links.forEach(link => {
+			const url = new URL(link.href, window.location.href)
+
+			if(url.hostname !== currentHost) {
+				link.setAttribute('target', '_blank')
+				link.setAttribute('rel', 'noopener noreferrer')
+			}
 		})
 	})
 })()

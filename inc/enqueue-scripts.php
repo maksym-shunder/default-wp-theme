@@ -5,6 +5,8 @@ function auto_enqueue_styles()
 	$exclude = [
 		'header.css',
 		'global.css',
+		'popup.css',
+		'cart-popup.css',
 	];
 
 	$base_dir = get_stylesheet_directory() . '/assets/css';
@@ -33,7 +35,14 @@ function auto_enqueue_styles()
 		$file_url = $base_url . '/' . str_replace($base_dir . '/', '', $file->getPathname());
 		$file_url = str_replace('\\', '/', $file_url);
 
-		printf('<link rel="stylesheet" id="%s-css" href="%s?ver=%d" type="text/css" media="all" />' . PHP_EOL, esc_attr($handle), esc_url($file_url), filemtime($file->getPathname()));
+		printf(
+			'<link rel="stylesheet" href="%s?ver=%d" media="print" onload="this.media=\'all\'">' . PHP_EOL .
+			'<noscript><link rel="stylesheet" href="%s?ver=%d"></noscript>' . PHP_EOL,
+			esc_url($file_url),
+			filemtime($file->getPathname()),
+			esc_url($file_url),
+			filemtime($file->getPathname())
+		);
 	}
 }
 

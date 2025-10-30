@@ -35,6 +35,22 @@
 		onload="this.rel=`stylesheet`"
 	>
 
+	<?php $ver = filemtime(get_template_directory() . '/assets/css/components/popup.css'); ?>
+	<link
+		rel="preload"
+		href="<?= get_template_directory_uri() ?>/assets/css/components/popup.css?ver=<?= $ver ?>"
+		as="style"
+		onload="this.rel=`stylesheet`"
+	>
+
+	<?php $ver = filemtime(get_template_directory() . '/assets/css/components/cart-popup.css'); ?>
+	<link
+		rel="preload"
+		href="<?= get_template_directory_uri() ?>/assets/css/components/cart-popup.css?ver=<?= $ver ?>"
+		as="style"
+		onload="this.rel=`stylesheet`"
+	>
+
 	<?php
 	$blockToPreload = get_first_block_name_on_page();
 	$blockStylesUrl = get_template_directory_uri() . '/template-parts/gutenberg-blocks/' . $blockToPreload . '/assets/style.css';
@@ -65,10 +81,22 @@
 		<?php endforeach;
 	endif; ?>
 
+
+	<?php $ver = filemtime(get_template_directory() . '/assets/js/main.js'); ?>
+	<link
+		rel="preload"
+		href="<?= get_template_directory_uri() ?>/assets/js/main.js?ver=<?= $ver ?>"
+		as="script"
+	>
 	<!--	Remove if no jQuery -->
 	<link
 		rel="preload"
-		href="/wp-includes/js/jquery/jquery.min.js"
+		href="/wp-includes/js/jquery/jquery.min.js?ver=3.7.1"
+		as="script"
+	>
+	<link
+		rel="preload"
+		href="/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1"
 		as="script"
 	>
 
@@ -150,7 +178,6 @@
 					href="/"
 					class="site-logo"
 				>
-					logo
 					<img
 						src="<?= get_field('header_logo', 'option')['url'] ?? '' ?>"
 						alt="<?= get_field('header_logo', 'option')['alt'] ?? '' ?>"

@@ -36,7 +36,7 @@
 	>
 
 	<?php
-	$blockToPreload = get_first_html_block_name();
+	$blockToPreload = get_first_block_name_on_page();
 	$blockStylesUrl = get_template_directory_uri() . '/template-parts/gutenberg-blocks/' . $blockToPreload . '/assets/style.css';
 	$ver = filemtime(get_template_directory() . '/template-parts/gutenberg-blocks/' . $blockToPreload . '/assets/style.css');
 	?>
@@ -52,6 +52,18 @@
 		href="<?= get_field('header_logo', 'option')['url'] ?? '' ?>"
 		as="image"
 	>
+
+	<?php
+	$imagesToPreload = get_images_from_first_block_on_page();
+	if (!empty($imagesToPreload)):
+		foreach ($imagesToPreload as $item): ?>
+			<link
+				rel="preload"
+				href="<?= $item ?>"
+				as="image"
+			>
+		<?php endforeach;
+	endif; ?>
 
 	<!--	Remove if no jQuery -->
 	<link

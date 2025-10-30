@@ -33,7 +33,7 @@ function auto_enqueue_styles()
 		$file_url = $base_url . '/' . str_replace($base_dir . '/', '', $file->getPathname());
 		$file_url = str_replace('\\', '/', $file_url);
 
-		wp_enqueue_style($handle, $file_url, [], filemtime($file->getPathname()));
+		printf('<link rel="stylesheet" id="%s-css" href="%s?ver=%d" type="text/css" media="all" />' . PHP_EOL, esc_attr($handle), esc_url($file_url), filemtime($file->getPathname()));
 	}
 }
 

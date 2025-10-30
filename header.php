@@ -35,6 +35,17 @@
 		onload="this.rel=`stylesheet`"
 	>
 
+	<?php
+	$blockToPreload = get_first_html_block_name();
+	$blockStylesUrl = get_template_directory_uri() . '/template-parts/gutenberg-blocks/' . $blockToPreload . '/assets/style.css';
+	$ver = filemtime(get_template_directory() . '/template-parts/gutenberg-blocks/' . $blockToPreload . '/assets/style.css');
+	?>
+	<link
+		rel="preload"
+		href="<?= $blockStylesUrl ?>?ver=<?= $ver ?>"
+		as="style"
+		onload="this.rel=`stylesheet`"
+	>
 
 	<link
 		rel="preload"
@@ -42,7 +53,7 @@
 		as="image"
 	>
 
-	<!--	Remove if jQuery removed-->
+	<!--	Remove if no jQuery -->
 	<link
 		rel="preload"
 		href="/wp-includes/js/jquery/jquery.min.js"

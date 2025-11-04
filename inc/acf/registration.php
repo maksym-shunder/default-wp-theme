@@ -28,14 +28,3 @@ function acf_blocks()
 		}
 	}
 }
-
-// Preload all banner block styles early in the head
-add_action('wp_head', function () {
-	global $styles_to_preload;
-
-	if (!empty($styles_to_preload)) {
-		foreach (array_unique($styles_to_preload) as $href) {
-			printf('<link rel="preload" as="style" href="%s" onload="this.rel=\'stylesheet\'" />' . "\n", esc_url($href));
-		}
-	}
-}, 1);

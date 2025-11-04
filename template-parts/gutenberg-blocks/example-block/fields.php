@@ -6,12 +6,8 @@ acf_add_local_field_group(array(
 		array(
 			'key'   => 'text',
 			'label' => 'Some Text Field',
+			'name'  => 'text',
 			'type'  => 'text',
-		),
-		array(
-			'key'   => 'image',
-			'label' => 'Some Image',
-			'type'  => 'image',
 		),
 	),
 	'location' => array(

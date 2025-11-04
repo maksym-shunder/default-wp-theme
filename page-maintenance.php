@@ -26,14 +26,13 @@
 		flex-direction: column;
 		width: 100vw;
 		height: 100vh;
-		background-color: #003512;
+		background-color: #CFDBC3;
 	}
 
 	.header {
 		margin-top: 40px;
 		margin-left: 40px;
 		width: 300px;
-		filter: invert(1);
 
 		img {
 			width: 100%;
@@ -47,25 +46,13 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+		gap: 16px;
 		text-align: center;
 		color: #fff;
+		font-size: 18px;
 
 		h1 {
-			font-size: 72px;
-			margin-bottom: 32px;
-		}
-
-		p {
-			font-size: 36px;
-		}
-
-		span {
-			margin-top: 32px;
-			display: inline-block;
-			font-size: 26px;
-			padding: 12px 32px;
-			background-color: #109558;
-			border-radius: 30px;
+			font-size: 48px;
 		}
 	}
 
@@ -73,38 +60,24 @@
 		.header {
 			margin: 40px auto;
 		}
-
-		.body {
-			h1 {
-				font-size: 42px;
-			}
-
-			p {
-				font-size: 21px;
-			}
-
-			span {
-				font-size: 16px;
-			}
-		}
 	}
 </style>
 
 <body>
 
 <main class="coming-soon">
-	<div class="header">
-		<img
-			src="<?= get_field('header_logo', 'option')['url'] ?>"
-			alt="<?= get_field('header_logo', 'option')['alt'] ?>"
-		>
-	</div>
+	<?php if (!empty(get_field('header_logo', 'option'))): ?>
+		<div class="header">
+			<img
+				src="<?= get_field('header_logo', 'option')['url'] ?>"
+				alt="<?= get_field('header_logo', 'option')['alt'] ?>"
+			>
+		</div>
+	<?php endif; ?>
 
 	<div class="body">
-		<h1>Wkrótce startujemy!</h1>
-		<p>Troskliwe technologie.</p>
-		<p>Inteligentne innowacje.</p>
-		<span>W SEBONE SKUPIAMY SIĘ NA TYM, ŻEBY UŁATWIĆ CI DBANIE O SIEBIE</span>
+		<h1>Sorry, website is on maintenance.</h1>
+		<p>We will return as fast as possible.</p>
 	</div>
 </main>
 

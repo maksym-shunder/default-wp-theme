@@ -1,4 +1,11 @@
 <?php
+
+//Disable woocommerce selling functions
+if (get_field('disable_payments', 'option')) {
+	add_filter('woocommerce_is_purchasable', '__return_false');
+	add_filter('woocommerce_variation_is_purchasable', '__return_false');
+}
+
 // Move payment methods inside the billing fields group
 remove_action('woocommerce_checkout_order_review', 'woocommerce_checkout_payment', 20);
 add_action('woocommerce_checkout_after_customer_details', 'woocommerce_checkout_payment', 25);
@@ -15,7 +22,7 @@ add_action('after_setup_theme', 'add_woocommerce_support');
 add_filter('use_block_editor_for_post_type', 'activate_gutenberg_product', 10, 2);
 function activate_gutenberg_product($can_edit, $post_type)
 {
-	if ($post_type == 'product') {
+	if ($post_type === 'product') {
 		$can_edit = true;
 	}
 	return $can_edit;

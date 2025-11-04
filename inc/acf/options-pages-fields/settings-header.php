@@ -7,6 +7,7 @@ acf_add_local_field_group(array(
 		array(
 			'key'           => 'header_logo',
 			'label'         => 'Header Logo',
+			'name'          => 'header_logo',
 			'type'          => 'image',
 			'return_format' => 'array',
 			'wrapper'       => array('width' => '50%'),

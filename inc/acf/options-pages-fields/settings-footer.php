@@ -7,6 +7,7 @@ acf_add_local_field_group(array(
 		array(
 			'key'           => 'footer_logo',
 			'label'         => 'Footer Logo',
+			'name'          => 'footer_logo',
 			'type'          => 'image',
 			'return_format' => 'array',
 			'wrapper'       => array('width' => '50%'),
@@ -14,6 +15,7 @@ acf_add_local_field_group(array(
 		array(
 			'key'   => 'footer_copyright',
 			'label' => 'Footer Copyright',
+			'name'  => 'footer_copyright',
 			'type'  => 'text',
 		),
 	),

@@ -14,7 +14,9 @@
 
 # English
 
-Custom WordPress theme with WooCommerce support. The theme includes a custom Gutenberg blocks system based on ACF fields, resource loading optimization, and a flexible settings system via ACF.
+Custom WordPress theme with WooCommerce support. The theme includes a custom Gutenberg
+blocks system based on ACF fields, resource loading optimization, and a flexible settings
+system via ACF.
 
 ## 🚀 Key Features
 
@@ -28,9 +30,11 @@ Custom WordPress theme with WooCommerce support. The theme includes a custom Gut
 ## 📦 Requirements
 
 ### Required Plugins:
+
 - **Advanced Custom Fields (ACF)** — for working with custom fields and blocks
 
 ### Recommended Plugins:
+
 - **WooCommerce** — if using e-commerce functionality
 
 ## 📁 Project Structure
@@ -46,7 +50,7 @@ default-wp-theme/
 │   │   ├── main.js            # Main script
 │   │   ├── woocommerce.js     # WooCommerce scripts
 │   │   └── swiper.min.js      # Swiper.js library
-│   ├── font/                  # Fonts (PP Neue Montreal)
+│   ├── font/                  # Fonts
 │   └── images/                # Images
 ├── inc/                       # PHP modules
 │   ├── acf/                   # ACF integration
@@ -85,7 +89,8 @@ default-wp-theme/
 
 ### 1. Navigation Menus
 
-To configure menus, go to **Appearance → Menus** and create menus with the following locations:
+To configure menus, go to **Appearance → Menus** and create menus with the following
+locations:
 
 - **Main Menu** — main menu in the header
 - **Footer Menu** — footer menu
@@ -104,21 +109,26 @@ register_nav_menus(array(
 The theme automatically creates options pages in the admin panel:
 
 - **Theme Settings** (main page)
-  - **Global Settings** — global theme settings
-  - **Settings Header** — header settings (logo, etc.)
-  - **Settings Footer** — footer settings
+    - **Global Settings** — global theme settings
+    - **Settings Header** — header settings (logo, etc.)
+    - **Settings Footer** — footer settings
 
 Fields for these pages are located in `inc/acf/options-pages-fields/`.
 
 ### 3. Popups
 
-The theme supports a popup system. An example popup is located in `template-parts/popups/example-popup.php`.
+The theme supports a popup system. An example popup is located in
+`template-parts/popups/example-popup.php`.
 
 **Using a popup:**
 
 ```html
-<button data-action="togglePopup" data-target="#example_popup">
-    Open Popup
+
+<button
+	data-action="togglePopup"
+	data-target="#example_popup"
+>
+	Open Popup
 </button>
 ```
 
@@ -127,20 +137,20 @@ The theme supports a popup system. An example popup is located in `template-part
 
 ### 4. Maintenance Mode
 
-Activate maintenance mode through the ACF options page **Global Settings** → `maintenance_mode` field.
+Activate maintenance mode through the ACF options page **Global Settings** →
+`maintenance_mode` field.
 
-When the mode is active, all users (except administrators) will be redirected to the `/maintenance` page.
+When the mode is active, all users (except administrators) will be redirected to the
+`/maintenance` page.
 
 ### 5. Disable WooCommerce Payments
 
-If you need to temporarily disable the ability to make purchases, use the option in **Global Settings** → `disable_payments` field.
+If you need to temporarily disable the ability to make purchases, use the option in *
+*Global Settings** → `disable_payments` field.
 
 ## 🎨 Custom Gutenberg Blocks
 
-The theme supports creating custom Gutenberg blocks with ACF fields. Example blocks:
-
-- `example-block` — basic block example
-- `video-block` — video block
+The theme supports creating custom Gutenberg blocks with ACF fields.
 
 **Block structure:**
 
@@ -155,7 +165,8 @@ gutenberg-blocks/
         └── script.js   # JavaScript (optional)
 ```
 
-**Automatic preloading:** The theme automatically preloads styles and images from the first block on the page for speed optimization.
+**Automatic preloading:** The theme automatically preloads styles and images from the
+first block on the page for speed optimization.
 
 ## 🛒 WooCommerce
 
@@ -199,10 +210,10 @@ If you are not using WooCommerce, follow these steps:
    ```
 
 3. **Remove files:**
-   - `inc/woocommerce.php`
-   - `assets/js/woocommerce.js`
-   - Entire `woocommerce/` folder
-   - All files from `templates/` folder
+    - `inc/woocommerce.php`
+    - `assets/js/woocommerce.js`
+    - Entire `woocommerce/` folder
+    - All files from `templates/` folder
 
 4. **Remove from `functions.php`:**
    ```php
@@ -231,7 +242,9 @@ If you are not using WooCommerce, follow these steps:
 
 ## 🔧 Automatic Styles Enqueuing
 
-The theme automatically enqueues all CSS files from the `assets/css/` folder, except excluded ones:
+The theme automatically enqueues all CSS files from the `assets/css/` folder, except
+excluded ones:
+
 - `header.css`
 - `global.css`
 - `popup.css`
@@ -239,7 +252,8 @@ The theme automatically enqueues all CSS files from the `assets/css/` folder, ex
 
 These files are enqueued manually via `inc/preloads.php` for loading optimization.
 
-Styles are enqueued with `media="print"` and `onload="this.media='all'"` attributes for asynchronous loading.
+Styles are enqueued with `media="print"` and `onload="this.media='all'"` attributes for
+asynchronous loading.
 
 ## 🎯 JavaScript Functionality
 
@@ -255,6 +269,7 @@ The main script `assets/js/main.js` includes:
 ## 📦 Dependencies
 
 ### JavaScript Libraries:
+
 - **Swiper.js** — for sliders (included minified version)
 
 ---
@@ -263,7 +278,9 @@ The main script `assets/js/main.js` includes:
 
 # Українська
 
-Користувацька тема WordPress з підтримкою WooCommerce. Тема включає систему кастомних Gutenberg блоків, оптимізацію завантаження ресурсів та гнучку систему налаштувань через ACF.
+Користувацька тема WordPress з підтримкою WooCommerce. Тема включає систему кастомних
+Gutenberg блоків, оптимізацію завантаження ресурсів та гнучку систему налаштувань через
+ACF.
 
 ## 🚀 Основні можливості
 
@@ -277,9 +294,11 @@ The main script `assets/js/main.js` includes:
 ## 📦 Вимоги
 
 ### Обов'язкові плагіни:
+
 - **Advanced Custom Fields (ACF)** — для роботи з кастомними полями та блоками
 
 ### Рекомендовані плагіни:
+
 - **WooCommerce** — якщо використовується e-commerce функціональність
 
 ## 📁 Структура проекту
@@ -295,7 +314,7 @@ default-wp-theme/
 │   │   ├── main.js            # Основний скрипт
 │   │   ├── woocommerce.js     # WooCommerce скрипти
 │   │   └── swiper.min.js      # Swiper.js бібліотека
-│   ├── font/                  # Шрифти (PP Neue Montreal)
+│   ├── font/                  # Шрифти
 │   └── images/                # Зображення
 ├── inc/                       # PHP модулі
 │   ├── acf/                   # ACF інтеграція
@@ -334,7 +353,8 @@ default-wp-theme/
 
 ### 1. Меню навігації
 
-Для налаштування меню перейдіть у **Зовнішній вигляд → Меню** та створіть меню з такими локаціями:
+Для налаштування меню перейдіть у **Зовнішній вигляд → Меню** та створіть меню з такими
+локаціями:
 
 - **Main Menu** — головне меню в хедері
 - **Footer Menu** — меню в футері
@@ -353,21 +373,26 @@ register_nav_menus(array(
 Тема автоматично створює опційні сторінки в адмін-панелі:
 
 - **Theme Settings** (головна сторінка)
-  - **Global Settings** — глобальні налаштування теми
-  - **Settings Header** — налаштування хедера (логотип тощо)
-  - **Settings Footer** — налаштування футера
+    - **Global Settings** — глобальні налаштування теми
+    - **Settings Header** — налаштування хедера (логотип тощо)
+    - **Settings Footer** — налаштування футера
 
 Поля для цих сторінок знаходяться в `inc/acf/options-pages-fields/`.
 
 ### 3. Попапи
 
-Тема підтримує систему попапів. Приклад попапу знаходиться в `template-parts/popups/example-popup.php`.
+Тема підтримує систему попапів. Приклад попапу знаходиться в
+`template-parts/popups/example-popup.php`.
 
 **Використання попапу:**
 
 ```html
-<button data-action="togglePopup" data-target="#example_popup">
-    Відкрити попап
+
+<button
+	data-action="togglePopup"
+	data-target="#example_popup"
+>
+	Відкрити попап
 </button>
 ```
 
@@ -376,20 +401,20 @@ register_nav_menus(array(
 
 ### 4. Режим технічного обслуговування
 
-Активуйте режим технічного обслуговування через ACF опційну сторінку **Global Settings** → поле `maintenance_mode`.
+Активуйте режим технічного обслуговування через ACF опційну сторінку **Global Settings** →
+поле `maintenance_mode`.
 
-Коли режим активний, всі користувачі (крім адміністраторів) будуть перенаправлені на сторінку `/maintenance`.
+Коли режим активний, всі користувачі (крім адміністраторів) будуть перенаправлені на
+сторінку `/maintenance`.
 
 ### 5. Відключення платежів WooCommerce
 
-Якщо потрібно тимчасово відключити можливість покупок, використайте опцію в **Global Settings** → поле `disable_payments`.
+Якщо потрібно тимчасово відключити можливість покупок, використайте опцію в **Global
+Settings** → поле `disable_payments`.
 
 ## 🎨 Кастомні Gutenberg блоки
 
-Тема підтримує створення кастомних Gutenberg блоків з ACF полями. Приклади блоків:
-
-- `example-block` — приклад базового блоку
-- `video-block` — блок для відео
+Тема підтримує створення кастомних Gutenberg блоків з ACF полями.
 
 **Структура блоку:**
 
@@ -404,7 +429,8 @@ gutenberg-blocks/
         └── script.js   # JavaScript (опційно)
 ```
 
-**Автоматичний прелоадинг:** Тема автоматично прелоадить стилі та зображення з першого блоку на сторінці для оптимізації швидкості.
+**Автоматичний прелоадинг:** Тема автоматично прелоадить стилі та зображення з першого
+блоку на сторінці для оптимізації швидкості.
 
 ## 🛒 WooCommerce
 
@@ -448,10 +474,10 @@ gutenberg-blocks/
    ```
 
 3. **Видаліть файли:**
-   - `inc/woocommerce.php`
-   - `assets/js/woocommerce.js`
-   - Всю папку `woocommerce/`
-   - Всі файли з папки `templates/`
+    - `inc/woocommerce.php`
+    - `assets/js/woocommerce.js`
+    - Всю папку `woocommerce/`
+    - Всі файли з папки `templates/`
 
 4. **Видаліть з `functions.php`:**
    ```php
@@ -481,6 +507,7 @@ gutenberg-blocks/
 ## 🔧 Автоматичне підключення стилів
 
 Тема автоматично підключає всі CSS файли з папки `assets/css/`, крім виключених:
+
 - `header.css`
 - `global.css`
 - `popup.css`
@@ -488,7 +515,8 @@ gutenberg-blocks/
 
 Ці файли підключаються вручну через `inc/preloads.php` для оптимізації завантаження.
 
-Стилі підключаються з атрибутом `media="print"` та `onload="this.media='all'"` для асинхронного завантаження.
+Стилі підключаються з атрибутом `media="print"` та `onload="this.media='all'"` для
+асинхронного завантаження.
 
 ## 🎯 JavaScript функціональність
 
@@ -504,4 +532,5 @@ gutenberg-blocks/
 ## 📦 Залежності
 
 ### JavaScript бібліотеки:
+
 - **Swiper.js** — для слайдерів (включена мінімізована версія)

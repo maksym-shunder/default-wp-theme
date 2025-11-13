@@ -19,6 +19,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install terser clean-css-cli
+
+      - name: Minify CSS and JS
+        run: node minify.js
+
       - name: Deploy to SFTP
         uses: wlixcc/SFTP-Deploy-Action@v1.2.5
         with:

@@ -27,8 +27,7 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           protocol: sftp
           port: ${{ secrets.PORT }}
-          local-dir: ./
-          server-dir: ${{ secrets.THEME_PATH }}
+          remote_path: ${{ secrets.THEME_PATH }}
           sftp_only: true
           delete: false
           exclude: |

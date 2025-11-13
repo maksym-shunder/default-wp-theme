@@ -28,7 +28,7 @@
 <?php wp_body_open(); ?>
 
 <header
-	class="header test"
+	class="header"
 	id="header"
 >
 	<div class="container">

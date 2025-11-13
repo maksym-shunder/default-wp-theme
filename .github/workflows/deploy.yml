@@ -25,7 +25,6 @@ jobs:
           server: ${{ secrets.SERVER }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          protocol: sftp
           port: ${{ secrets.PORT }}
           remote_path: ${{ secrets.THEME_PATH }}
           delete_remote_files: false

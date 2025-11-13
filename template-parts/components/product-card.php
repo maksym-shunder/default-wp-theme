@@ -9,7 +9,7 @@ if ($product_id):
 		$product_price = $product->get_price_html();
 		$tags = get_the_terms($product_id, 'product_tag');
 		?>
-		<div class="product_box 111">
+		<div class="product_box">
 			<a
 				href="<?= $product_permalink; ?>"
 				class="img_box"

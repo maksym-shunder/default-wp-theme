@@ -2,7 +2,6 @@
 
 if (!defined('ABSPATH')) exit;
 
-add_action('after_setup_theme', 'custom_template_register_menus');
 function custom_template_register_menus()
 {
 	register_nav_menus(array(
@@ -11,7 +10,8 @@ function custom_template_register_menus()
 	));
 }
 
-add_filter('upload_mimes', 'add_file_types_to_uploads');
+add_action('after_setup_theme', 'custom_template_register_menus');
+
 function add_file_types_to_uploads($file_types)
 {
 	$new_filetypes = array();
@@ -19,6 +19,8 @@ function add_file_types_to_uploads($file_types)
 	$file_types = array_merge($file_types, $new_filetypes);
 	return $file_types;
 }
+
+add_filter('upload_mimes', 'add_file_types_to_uploads');
 
 // remove block-library styles
 add_action('wp_enqueue_scripts', function () {

@@ -35,18 +35,10 @@ function auto_enqueue_styles()
 		$file_url = $base_url . '/' . str_replace($base_dir . '/', '', $file->getPathname());
 		$file_url = str_replace('\\', '/', $file_url);
 
-		printf(
-			'<link rel="stylesheet" href="%s?ver=%d" media="print" onload="this.media=\'all\'">' . PHP_EOL .
-			'<noscript><link rel="stylesheet" href="%s?ver=%d"></noscript>' . PHP_EOL,
-			esc_url($file_url),
-			filemtime($file->getPathname()),
-			esc_url($file_url),
-			filemtime($file->getPathname())
-		);
+		printf('<link rel="stylesheet" href="%s?ver=%d" media="print" onload="this.media=\'all\'">' . PHP_EOL . '<noscript><link rel="stylesheet" href="%s?ver=%d"></noscript>' . PHP_EOL, esc_url($file_url), filemtime($file->getPathname()), esc_url($file_url), filemtime($file->getPathname()));
 	}
 }
 
-add_action('wp_enqueue_scripts', 'theme_scripts');
 function theme_scripts()
 {
 	if (!is_user_logged_in()) {
@@ -70,3 +62,5 @@ function theme_scripts()
 	wp_enqueue_script('wc-add-to-cart');
 	wp_enqueue_script('cart-js', get_template_directory_uri() . '/assets/js/woocommerce.js', [], filemtime(get_template_directory() . '/assets/js/woocommerce.js'), true);
 }
+
+add_action('wp_enqueue_scripts', 'theme_scripts');

@@ -4,7 +4,6 @@ if (!class_exists('ACF')) {
 	return;
 }
 
-add_action('after_switch_theme', 'create_maintenance_page');
 function create_maintenance_page()
 {
 	$page_title = 'Maintenance Page';
@@ -22,10 +21,9 @@ function create_maintenance_page()
 	}
 }
 
+add_action('after_switch_theme', 'create_maintenance_page');
 
-if (get_field('maintenance_mode', 'option')) {
-	add_action('template_redirect', 'maintenance_redirect');
-}
+
 function maintenance_redirect()
 {
 	$slug = 'maintenance';
@@ -44,4 +42,8 @@ function maintenance_redirect()
 
 	wp_redirect(home_url('/' . $slug));
 	exit;
+}
+
+if (get_field('maintenance_mode', 'option')) {
+	add_action('template_redirect', 'maintenance_redirect');
 }

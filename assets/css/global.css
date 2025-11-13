@@ -136,6 +136,7 @@ section {
 }
 
 .container {
+	width: 100%;
 	max-width: 1344px;
 	margin: 0 auto;
 	padding: 0 32px;

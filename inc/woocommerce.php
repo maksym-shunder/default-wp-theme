@@ -19,7 +19,6 @@ add_action('after_setup_theme', 'add_woocommerce_support');
 
 
 // enable gutenberg for woocommerce
-add_filter('use_block_editor_for_post_type', 'activate_gutenberg_product', 10, 2);
 function activate_gutenberg_product($can_edit, $post_type)
 {
 	if ($post_type === 'product') {
@@ -28,19 +27,21 @@ function activate_gutenberg_product($can_edit, $post_type)
 	return $can_edit;
 }
 
+add_filter('use_block_editor_for_post_type', 'activate_gutenberg_product', 10, 2);
+
 
 // enable taxonomy fields for woocommerce with gutenberg on
-add_filter('woocommerce_taxonomy_args_product_cat', 'enable_taxonomy_rest');
-add_filter('woocommerce_taxonomy_args_product_tag', 'enable_taxonomy_rest');
 function enable_taxonomy_rest($args)
 {
 	$args['show_in_rest'] = true;
 	return $args;
 }
 
+add_filter('woocommerce_taxonomy_args_product_cat', 'enable_taxonomy_rest');
+add_filter('woocommerce_taxonomy_args_product_tag', 'enable_taxonomy_rest');
+
 
 // fragment
-add_filter('woocommerce_add_to_cart_fragments', 'custom_header_add_to_cart_fragment');
 function custom_header_add_to_cart_fragment($fragments)
 {
 	ob_start();
@@ -53,6 +54,8 @@ function custom_header_add_to_cart_fragment($fragments)
 
 	return $fragments;
 }
+
+add_filter('woocommerce_add_to_cart_fragments', 'custom_header_add_to_cart_fragment');
 
 // reset password page
 add_action('login_form_lostpassword', function () {

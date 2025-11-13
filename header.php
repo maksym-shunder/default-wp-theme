@@ -115,10 +115,10 @@
 					Example Popup
 				</button>
 
-				<?php get_template_part('template-parts/components/basket'); ?>
+				<?php //get_template_part('template-parts/components/basket'); ?>
 			</div>
 		</div>
 	</div>
 </header>
 
-<?php get_template_part('template-parts/components/header/cart-popup'); ?>
+<?php //get_template_part('template-parts/components/header/cart-popup'); ?>

@@ -35,7 +35,6 @@ function auto_enqueue_styles()
 
 		$relative_path = str_replace($base_dir . '/', '', $file_path);
 		$file_url = $base_url . '/' . $relative_path;
-		$file_url = str_replace('\\', '/', $file_url);
 
 		$handle = 'style-' . sanitize_title(str_replace([
 				'/',

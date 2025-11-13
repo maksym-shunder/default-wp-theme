@@ -22,6 +22,10 @@ async function minifyJS(dir) {
 	const files = getFiles(dir, '.js')
 	await Promise.all(
 		files.map(async filePath => {
+			if(filePath.endsWith('.min.js')) {
+				console.log(`Skipped already minified JS: ${filePath}`)
+				return
+			}
 			const code = fs.readFileSync(filePath, 'utf8')
 			try {
 				const result = await minify(code)
@@ -39,9 +43,13 @@ async function minifyJS(dir) {
 function minifyCSS(dir) {
 	const files = getFiles(dir, '.css')
 	files.forEach(filePath => {
+		if(filePath.endsWith('.min.css')) {
+			console.log(`Skipped already minified CSS: ${filePath}`)
+			return
+		}
 		const code = fs.readFileSync(filePath, 'utf8')
 		try {
-			const output = csso.minify(code).css
+			const output = csso.minify(code, {restructure: false}).css
 			fs.writeFileSync(filePath, output, 'utf8')
 			console.log(`Minified CSS: ${filePath}`)
 		} catch(err) {

@@ -28,11 +28,4 @@ jobs:
           protocol: sftp
           port: ${{ secrets.PORT }}
           remote_path: ${{ secrets.THEME_PATH }}
-          sftp_only: true
-          delete: false
-          exclude: |
-            **/.git*
-            **/.github*
-            **/node_modules/**
-            **/.DS_Store
-            *.md
+          delete_remote_files: false

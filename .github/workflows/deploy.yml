@@ -1,0 +1,36 @@
+name: 🚀 Deploy to SFTP
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [ closed ]
+    branches:
+      - main
+
+jobs:
+  sftp-deploy:
+    if: github.event_name == 'push' || (github.event.pull_request.merged == true)
+    name: Upload via SFTP
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Deploy to SFTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.SERVER }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          protocol: sftp
+          port: ${{ secrets.PORT }}
+          local-dir: ./
+          server-dir: ${{ secrets.THEME_PATH }}
+          exclude: |
+            **/.git*
+            **/.github*
+            **/node_modules/**
+            **/.DS_Store

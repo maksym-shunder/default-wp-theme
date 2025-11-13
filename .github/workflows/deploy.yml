@@ -39,3 +39,4 @@ jobs:
           port: ${{ secrets.PORT }}
           remote_path: ${{ secrets.THEME_PATH }}
           delete_remote_files: false
+          rsyncArgs: "--exclude=node_modules --exclude=package.json --exclude=package-lock.json"

@@ -60,14 +60,12 @@ function get_images_from_first_block_on_page($post_id = null)
 		$post_id = get_the_ID();
 	}
 
-	// Беремо готовий HTML, який бачить користувач
 	$content = apply_filters('the_content', get_post_field('post_content', $post_id));
 
 	if (empty($content)) {
 		return [];
 	}
 
-	// Обертаємо у повноцінний HTML документ
 	$html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head><body>' . $content . '</body></html>';
 
 	libxml_use_internal_errors(true);
@@ -78,7 +76,6 @@ function get_images_from_first_block_on_page($post_id = null)
 
 	$xpath = new DOMXPath($dom);
 
-	// Знаходимо перший тег з потрібних
 	$nodes = $xpath->query('//body/*[self::section or self::div or self::article or self::header or self::main or self::footer]');
 	if ($nodes->length === 0) {
 		return [];
@@ -86,7 +83,6 @@ function get_images_from_first_block_on_page($post_id = null)
 
 	$firstSection = $nodes->item(0);
 
-	// Знаходимо всі <img> з fetchpriority="high"
 	$imgNodes = $xpath->query('.//img[@fetchpriority="high"]', $firstSection);
 
 	$images = [];

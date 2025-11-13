@@ -2,40 +2,50 @@
 
 function auto_enqueue_styles()
 {
+	$base_dir = get_stylesheet_directory() . '/assets/css';
+	$base_url = get_stylesheet_directory_uri() . '/assets/css';
+
 	$exclude = [
 		'header.css',
 		'global.css',
 		'popup.css',
 		'cart-popup.css',
+		'swiper.css',
 	];
 
-	$base_dir = get_stylesheet_directory() . '/assets/css';
-	$base_url = get_stylesheet_directory_uri() . '/assets/css';
-
 	if (!is_dir($base_dir)) {
+		error_log("CSS directory not found: " . $base_dir);
 		return;
 	}
 
-	$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($base_dir, RecursiveDirectoryIterator::SKIP_DOTS));
+	$files_root = glob($base_dir . '/*.css');
+	$files_subdirs = glob($base_dir . '/**/*.css', GLOB_BRACE);
+	$files = array_merge($files_root ?: [], $files_subdirs ?: []);
 
-	foreach ($iterator as $file) {
-		if ($file->getExtension() !== 'css') {
-			continue;
-		}
+	if (empty($files)) {
+		error_log("No CSS files found in: " . $base_dir);
+		return;
+	}
 
-		$filename = $file->getFilename();
-
+	foreach ($files as $file_path) {
+		$filename = basename($file_path);
 		if (in_array($filename, $exclude)) {
 			continue;
 		}
 
-		$relative_path = str_replace($base_dir . '/', '', $file->getPathname());
-		$handle = 'style-' . sanitize_title(str_replace('/', '-', $relative_path));
-
-		$file_url = $base_url . '/' . str_replace($base_dir . '/', '', $file->getPathname());
+		$relative_path = str_replace($base_dir . '/', '', $file_path);
+		$file_url = $base_url . '/' . $relative_path;
 		$file_url = str_replace('\\', '/', $file_url);
 
-		printf('<link rel="stylesheet" href="%s?ver=%d" media="print" onload="this.media=\'all\'">' . PHP_EOL . '<noscript><link rel="stylesheet" href="%s?ver=%d"></noscript>' . PHP_EOL, esc_url($file_url), filemtime($file->getPathname()), esc_url($file_url), filemtime($file->getPathname()));
+		$handle = 'style-' . sanitize_title(str_replace([
+				'/',
+				'.css',
+			], [
+				'-',
+				'',
+			], $relative_path));
+
+		wp_enqueue_style($handle, esc_url($file_url), [], filemtime($file_path));
 	}
 }
 
@@ -48,6 +58,7 @@ function theme_scripts()
 	//styles
 	wp_enqueue_style('style', get_stylesheet_uri(), array(), null);
 	auto_enqueue_styles();
+	wp_enqueue_style('swiper-styles', get_stylesheet_directory_uri() . '/assets/css/swiper.css', array(), null);
 
 
 	// uncomment next line to remove jQuery if woocommerce isn't use
@@ -60,7 +71,7 @@ function theme_scripts()
 	// remove this if woocommerce isn't use
 	wp_enqueue_script('wc-cart-fragments');
 	wp_enqueue_script('wc-add-to-cart');
-	wp_enqueue_script('cart-js', get_template_directory_uri() . '/assets/js/woocommerce.js', [], filemtime(get_template_directory() . '/assets/js/woocommerce.js'), true);
+	wp_enqueue_script('cart-js', get_template_directory_uri() . '/assets/js/woocommerce.js', ['jquery'], filemtime(get_template_directory() . '/assets/js/woocommerce.js'), true);
 }
 
 add_action('wp_enqueue_scripts', 'theme_scripts');

@@ -17,10 +17,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Deploy to SFTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.5
         with:
           server: ${{ secrets.SERVER }}
           username: ${{ secrets.USERNAME }}
@@ -29,6 +29,8 @@ jobs:
           port: ${{ secrets.PORT }}
           local-dir: ./
           server-dir: ${{ secrets.THEME_PATH }}
+          sftp_only: true
+          delete: false
           exclude: |
             **/.git*
             **/.github*

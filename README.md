@@ -272,6 +272,47 @@ The main script `assets/js/main.js` includes:
 
 - **Swiper.js** — for sliders (included minified version)
 
+## 🚀 Automatic Deployment
+
+The theme includes automatic deployment via GitHub Actions. When you push changes to the `main` branch or merge a pull request, the deployment workflow automatically:
+
+1. **Minifies CSS and JavaScript** — all CSS and JS files are automatically minified using:
+   - **Terser** — for JavaScript minification
+   - **PostCSS** with **postcss-nesting** and **cssnano** — for CSS processing and minification
+
+2. **Deploys to SFTP server** — minified files are uploaded to your production server via SFTP
+
+### Deployment Triggers
+
+The deployment workflow runs automatically when:
+- You push directly to the `main` branch
+- A pull request is merged into the `main` branch
+
+### Configuration
+
+To set up automatic deployment, configure the following GitHub Secrets in your repository settings (**Settings → Secrets and variables → Actions**):
+
+- `SERVER` — SFTP server address
+- `USERNAME` — SFTP username
+- `PASSWORD` — SFTP password
+- `PORT` — SFTP port (usually 22)
+- `THEME_PATH` — remote path to the theme directory on the server
+
+### Files Minified
+
+The following directories are processed during deployment:
+
+- `assets/js/` — all JavaScript files
+- `assets/css/` — all CSS files
+- `template-parts/gutenberg-blocks/` — CSS and JS files in block assets
+
+> [!NOTE]
+> The minification process uses PostCSS with nesting support and cssnano for safe CSS minification that preserves functionality. JavaScript is minified using Terser with default settings.
+
+### Workflow File
+
+The deployment configuration is located in `.github/workflows/deploy.yml`. You can customize the deployment process by editing this file.
+
 ---
 
 <a name="українська"></a>
@@ -534,3 +575,44 @@ gutenberg-blocks/
 ### JavaScript бібліотеки:
 
 - **Swiper.js** — для слайдерів (включена мінімізована версія)
+
+## 🚀 Автоматичний деплой
+
+Тема включає автоматичний деплой через GitHub Actions. Коли ви пушите зміни в гілку `main` або мержите pull request, workflow автоматично:
+
+1. **Мініфікує CSS та JavaScript** — всі CSS та JS файли автоматично мініфікуються за допомогою:
+   - **Terser** — для мініфікації JavaScript
+   - **PostCSS** з **postcss-nesting** та **cssnano** — для обробки та мініфікації CSS
+
+2. **Деплоїть на SFTP сервер** — мініфіковані файли завантажуються на ваш продакшн сервер через SFTP
+
+### Тригери деплою
+
+Workflow деплою запускається автоматично коли:
+- Ви пушите напряму в гілку `main`
+- Pull request мержиться в гілку `main`
+
+### Налаштування
+
+Для налаштування автоматичного деплою, налаштуйте наступні GitHub Secrets в налаштуваннях репозиторію (**Settings → Secrets and variables → Actions**):
+
+- `SERVER` — адреса SFTP сервера
+- `USERNAME` — ім'я користувача SFTP
+- `PASSWORD` — пароль SFTP
+- `PORT` — порт SFTP (зазвичай 22)
+- `THEME_PATH` — віддалений шлях до директорії теми на сервері
+
+### Мініфіковані файли
+
+Під час деплою обробляються наступні директорії:
+
+- `assets/js/` — всі JavaScript файли
+- `assets/css/` — всі CSS файли
+- `template-parts/gutenberg-blocks/` — CSS та JS файли в assets блоків
+
+> [!NOTE]
+> Процес мініфікації використовує PostCSS з підтримкою nesting та cssnano для безпечної мініфікації CSS, яка зберігає функціональність. JavaScript мініфікується за допомогою Terser з налаштуваннями за замовчуванням.
+
+### Файл Workflow
+
+Конфігурація деплою знаходиться в `.github/workflows/deploy.yml`. Ви можете налаштувати процес деплою, відредагувавши цей файл.

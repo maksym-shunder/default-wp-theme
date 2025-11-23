@@ -56,6 +56,7 @@ function theme_scripts()
 
 	//styles
 	wp_enqueue_style('style', get_stylesheet_uri(), array(), null);
+	wp_enqueue_style('fonts', get_stylesheet_directory_uri() . '/assets/font/fonts.css', array(), null);
 	auto_enqueue_styles();
 	wp_enqueue_style('swiper-styles', get_stylesheet_directory_uri() . '/assets/css/swiper.css', array(), null);
 

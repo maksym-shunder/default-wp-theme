@@ -5,7 +5,6 @@ if (function_exists('acf_register_block_type')) {
 		'name'            => 'example-block',
 		'title'           => __('Example Block'),
 		'render_template' => __DIR__ . '/template.php',
-		'enqueue_style'   => get_template_directory_uri() . str_replace(get_template_directory(), '', __DIR__) . '/assets/style.css',
 		'mode'            => 'edit',
 		'keywords'        => array(),
 		'supports'        => array(
@@ -14,10 +13,14 @@ if (function_exists('acf_register_block_type')) {
 		'enqueue_assets'  => static function () {
 			$uri_base = get_template_directory_uri() . str_replace(get_template_directory(), '', __DIR__);
 
+			$style = __DIR__ . "/assets/style.css";
+			if (file_exists($style)) {
+				wp_enqueue_style('example-block-style', "{$uri_base}/assets/style.css", array(), filemtime($style));
+			}
 
-			$script = __DIR__ . "/script.js";
+			$script = __DIR__ . "/assets/script.js";
 			if (file_exists($script)) {
-				wp_enqueue_script("block-example-block", "{$uri_base}/script.js", null, filemtime($script), true);
+				wp_enqueue_script("example-block-script", "{$uri_base}/assets/script.js", null, filemtime($script), true);
 			}
 
 			// Specific styles and scripts

@@ -11,7 +11,11 @@ if (function_exists('acf_register_block_type')) {
 			'anchor' => true,
 		),
 		'enqueue_assets'  => static function () {
-			$uri_base = get_template_directory_uri() . str_replace(get_template_directory(), '', __DIR__);
+			// Fix for Windows
+			$theme_dir = str_replace('\\', '/', get_template_directory());
+			$current_dir = str_replace('\\', '/', __DIR__);
+
+			$uri_base = get_template_directory_uri() . str_replace($theme_dir, '', $current_dir);
 
 			$style = __DIR__ . "/assets/style.css";
 			if (file_exists($style)) {

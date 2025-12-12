@@ -14,7 +14,10 @@
 			$yoast = WPSEO_Frontend::get_instance();
 			$title = $yoast->title(get_the_ID());
 			if (!$title) {
-				$title = bloginfo('name') . ' - ' . get_the_title();
+				$title = bloginfo('name');
+				if (!is_front_page()) {
+					$title .= ' - ' . get_the_title();
+				}
 			}
 		}
 

@@ -96,4 +96,4 @@ function get_images_from_first_block_on_page($post_id = null)
 	return $images;
 }
 
-
+// TODO - закрити стандартний WP API

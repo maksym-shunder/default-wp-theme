@@ -30,6 +30,14 @@ jobs:
       - name: Minify CSS and JS
         run: node minify.js
 
+      - name: Check secrets presence
+        run: |
+          test -n "${{ secrets.SERVER }}" || (echo "SERVER is empty" && exit 1)
+          test -n "${{ secrets.USERNAME }}" || (echo "USERNAME is empty" && exit 1)
+          test -n "${{ secrets.PASSWORD }}" || (echo "PASSWORD is empty" && exit 1)
+          test -n "${{ secrets.PORT }}" || (echo "PORT is empty" && exit 1)
+          test -n "${{ secrets.THEME_PATH }}" || (echo "THEME_PATH is empty" && exit 1)
+
       - name: Deploy to SFTP
         uses: wlixcc/SFTP-Deploy-Action@v1.2.5
         with:

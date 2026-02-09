@@ -1,4 +1,4 @@
-name: 🚀 Deploy to SFTP
+name: 🚀 Deploy to FTP
 
 on:
   push:
@@ -12,12 +12,40 @@ on:
 jobs:
   sftp-deploy:
     if: github.event_name == 'push' || (github.event.pull_request.merged == true)
-    name: Upload via SFTP
+    name: Upload via FTP
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Notify Slack (start)
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          set -e
+          repo="${{ github.repository }}"
+          branch="${{ github.ref_name }}"
+          actor="${{ github.actor }}"
+          event="${{ github.event_name }}"
+          run_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          sha="${{ github.sha }}"
+          short_sha="$(echo "$sha" | cut -c1-7)"
+          commit_url="${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"
+
+          if [ "$event" = "pull_request" ]; then
+            pr_url="${{ github.event.pull_request.html_url }}"
+            pr_number="${{ github.event.pull_request.number }}"
+            pr_title="${{ github.event.pull_request.title }}"
+            payload=$(printf '{"text":"🟡 DEPLOY Oloi started\nRepo: %s\nPR: <%s|#%s> %s\nCommit: <%s|%s>\nBy: %s\nRun: %s"}' \
+              "$repo" "$pr_url" "$pr_number" "$pr_title" "$commit_url" "$short_sha" "$actor" "$run_url")
+          else
+            payload=$(printf '{"text":"🟡 DEPLOY Oloi started\nRepo: %s\nBranch: %s\nCommit: <%s|%s>\nBy: %s\nRun: %s"}' \
+              "$repo" "$branch" "$commit_url" "$short_sha" "$actor" "$run_url")
+          fi
+
+          curl -sS -X POST -H 'Content-type: application/json' --data "$payload" "$SLACK_WEBHOOK_URL"
+
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -30,21 +58,45 @@ jobs:
       - name: Minify CSS and JS
         run: node minify.js
 
-      - name: Check secrets presence
-        run: |
-          test -n "${{ secrets.SERVER }}" || (echo "SERVER is empty" && exit 1)
-          test -n "${{ secrets.USERNAME }}" || (echo "USERNAME is empty" && exit 1)
-          test -n "${{ secrets.PASSWORD }}" || (echo "PASSWORD is empty" && exit 1)
-          test -n "${{ secrets.PORT }}" || (echo "PORT is empty" && exit 1)
-          test -n "${{ secrets.THEME_PATH }}" || (echo "THEME_PATH is empty" && exit 1)
-
-      - name: Deploy to SFTP
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.5
+      - name: Deploy to FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.SERVER }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
+          protocol: ftp
           port: ${{ secrets.PORT }}
-          remote_path: ${{ secrets.THEME_PATH }}
-          delete_remote_files: false
-          rsyncArgs: "--exclude=node_modules --exclude=package.json --exclude=package-lock.json"
+          server-dir: ${{ secrets.THEME_PATH }}
+          dangerous-clean-slate: false
+          exclude: |
+            **/node_modules/**
+            **/.git/**
+            **/.github/**
+            package.json
+            package-lock.json
+
+      - name: Notify Slack (success)
+        if: success()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          set -e
+          run_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          sha="${{ github.sha }}"
+          short_sha="$(echo "$sha" | cut -c1-7)"
+          commit_url="${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"
+          payload=$(printf '{"text":"🟢 DEPLOY Oloi SUCCESS\nCommit: <%s|%s>\nRun: %s"}' "$commit_url" "$short_sha" "$run_url")
+          curl -sS -X POST -H 'Content-type: application/json' --data "$payload" "$SLACK_WEBHOOK_URL"
+
+      - name: Notify Slack (failure)
+        if: failure()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          set -e
+          run_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          sha="${{ github.sha }}"
+          short_sha="$(echo "$sha" | cut -c1-7)"
+          commit_url="${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"
+          payload=$(printf '{"text":"🔴 DEPLOY Oloi FAILED\nCommit: <%s|%s>\nRun: %s"}' "$commit_url" "$short_sha" "$run_url")
+          curl -sS -X POST -H 'Content-type: application/json' --data "$payload" "$SLACK_WEBHOOK_URL"

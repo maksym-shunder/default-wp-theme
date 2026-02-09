@@ -1,7 +1,7 @@
 <?php
 get_header(); ?>
 
-<main role="main">
+<main role="main" class="content">
 	<?php the_content(); ?>
 </main>
 

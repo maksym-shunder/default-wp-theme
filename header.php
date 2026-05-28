@@ -131,7 +131,7 @@
 					Example Popup
 				</button>
 
-				<?php //get_template_part('template-parts/components/basket'); ?>
+				<?php get_template_part('template-parts/components/basket'); ?>
 			</div>
 		</div>
 	</div>

@@ -1,5 +1,5 @@
 <?php
-$text = get_field('text');
+$text = theme_field('text', __('Example text', 'digiway'));
 
 $block_anchor = $block['anchor'] ?? '';
 $block_classes = 'example-block';
@@ -13,6 +13,6 @@ if (!empty($block['className'])) {
 	id="<?= esc_attr($block_anchor) ?>"
 >
 	<div class="container">
-
+		<p><?= esc_html($text) ?></p>
 	</div>
 </section>

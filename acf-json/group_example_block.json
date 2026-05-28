@@ -1,0 +1,30 @@
+{
+	"key": "group_example_block",
+	"title": "Example Block",
+	"fields": [
+		{
+			"key": "field_example_block_text",
+			"label": "Some Text Field",
+			"name": "text",
+			"type": "text"
+		}
+	],
+	"location": [
+		[
+			{
+				"param": "block",
+				"operator": "==",
+				"value": "digiway/example-block"
+			}
+		]
+	],
+	"menu_order": 0,
+	"position": "normal",
+	"style": "default",
+	"label_placement": "top",
+	"instruction_placement": "label",
+	"hide_on_screen": "",
+	"active": true,
+	"description": "",
+	"show_in_rest": 0
+}

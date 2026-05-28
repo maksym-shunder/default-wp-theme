@@ -14,17 +14,26 @@ function acf_blocks()
 	require_once __DIR__ . '/options-pages-fields/settings-global.php';
 	require_once __DIR__ . '/options-pages-fields/settings-header.php';
 	require_once __DIR__ . '/options-pages-fields/settings-footer.php';
-
-	// Gutenberg gutenberg-blocks
-	$blocks_dir = __DIR__ . '/../../template-parts/gutenberg-blocks';
-	$folders = glob($blocks_dir . '/*', GLOB_ONLYDIR);
-
-	if ($folders) {
-		foreach ($folders as $folder) {
-			$file = $folder . '/index.php';
-			if (file_exists($file)) {
-				require_once $file;
-			}
-		}
-	}
 }
+
+// Register custom block category used by theme block.json files.
+add_filter('block_categories_all', function ($categories) {
+	return array_merge(
+		[
+			[
+				'slug'  => 'digiway-blocks',
+				'title' => __('Digiway Blocks', 'digiway'),
+				'icon'  => null,
+			],
+		],
+		$categories
+	);
+});
+
+// Register Gutenberg blocks from per-folder block.json metadata.
+add_action('init', function () {
+	$blocks_dir = get_template_directory() . '/template-parts/gutenberg-blocks';
+	foreach (glob($blocks_dir . '/*/block.json') as $block_json) {
+		register_block_type(dirname($block_json));
+	}
+});

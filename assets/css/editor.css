@@ -1,0 +1,18 @@
+.editor-styles-wrapper {
+	font-family: var(--font), sans-serif;
+	font-weight: 400;
+	color: var(--text-color, #333131);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.editor-styles-wrapper h1,
+.editor-styles-wrapper h2,
+.editor-styles-wrapper h3,
+.editor-styles-wrapper h4,
+.editor-styles-wrapper h5,
+.editor-styles-wrapper h6 {
+	font-family: var(--font), sans-serif;
+	font-weight: 500;
+	color: var(--title-color, #161616);
+}

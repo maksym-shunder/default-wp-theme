@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "digiway/video-block",
+	"title": "Video Block",
+	"description": "",
+	"category": "digiway-blocks",
+	"icon": "format-video",
+	"keywords": [],
+	"textdomain": "digiway",
+	"supports": {
+		"anchor": true,
+		"jsx": true
+	},
+	"acf": {
+		"mode": "preview",
+		"blockVersion": 3,
+		"autoInlineEditing": true,
+		"renderTemplate": "render.php"
+	},
+	"style": "file:./assets/style.css"
+}

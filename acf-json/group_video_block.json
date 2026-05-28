@@ -1,0 +1,45 @@
+{
+	"key": "group_video_block",
+	"title": "Video Block",
+	"fields": [
+		{
+			"key": "field_video_block_video",
+			"label": "Video",
+			"name": "video",
+			"type": "file",
+			"return_format": "array",
+			"mime_types": "mp4,webm,ogg",
+			"wrapper": {
+				"width": "50%"
+			}
+		},
+		{
+			"key": "field_video_block_poster",
+			"label": "Video Poster",
+			"name": "video_poster",
+			"type": "image",
+			"return_format": "array",
+			"wrapper": {
+				"width": "50%"
+			}
+		}
+	],
+	"location": [
+		[
+			{
+				"param": "block",
+				"operator": "==",
+				"value": "digiway/video-block"
+			}
+		]
+	],
+	"menu_order": 0,
+	"position": "normal",
+	"style": "default",
+	"label_placement": "top",
+	"instruction_placement": "label",
+	"hide_on_screen": "",
+	"active": true,
+	"description": "",
+	"show_in_rest": 0
+}

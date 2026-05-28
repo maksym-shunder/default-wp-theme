@@ -75,3 +75,25 @@ function theme_scripts()
 }
 
 add_action('wp_enqueue_scripts', 'theme_scripts');
+
+// Load global styles + fonts inside the Gutenberg editor iframe
+// so block previews render with theme typography and base styles.
+add_action('enqueue_block_editor_assets', function () {
+	$editor_assets = [
+		'editor-fonts'    => '/assets/font/fonts.css',
+		'editor-global'   => '/assets/css/global.css',
+		'editor-overrides' => '/assets/css/editor.css',
+	];
+
+	foreach ($editor_assets as $handle => $rel_path) {
+		$abs_path = get_template_directory() . $rel_path;
+		if (file_exists($abs_path)) {
+			wp_enqueue_style(
+				$handle,
+				get_template_directory_uri() . $rel_path,
+				[],
+				filemtime($abs_path)
+			);
+		}
+	}
+});

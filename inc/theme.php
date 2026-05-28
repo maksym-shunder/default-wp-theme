@@ -12,6 +12,16 @@ function custom_template_register_menus()
 
 add_action('after_setup_theme', 'custom_template_register_menus');
 
+// Editor stylesheet support so block previews match frontend.
+add_action('after_setup_theme', function () {
+	add_theme_support('editor-styles');
+	add_editor_style([
+		'assets/font/fonts.css',
+		'assets/css/global.css',
+		'assets/css/editor.css',
+	]);
+});
+
 function add_file_types_to_uploads($file_types)
 {
 	$new_filetypes = array();

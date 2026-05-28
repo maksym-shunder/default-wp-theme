@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "digiway/example-block",
+	"title": "Example Block",
+	"description": "",
+	"category": "digiway-blocks",
+	"icon": "smiley",
+	"keywords": [],
+	"textdomain": "digiway",
+	"supports": {
+		"anchor": true,
+		"jsx": true
+	},
+	"acf": {
+		"mode": "preview",
+		"blockVersion": 3,
+		"autoInlineEditing": true,
+		"renderTemplate": "render.php"
+	},
+	"style": "file:./assets/style.css",
+	"viewScript": "file:./assets/script.js"
+}

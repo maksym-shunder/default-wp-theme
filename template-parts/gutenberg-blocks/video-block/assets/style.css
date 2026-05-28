@@ -4,7 +4,7 @@
 		padding-top: 54.7%;
 		overflow: hidden;
 		border-radius: 24px;
-
+		
 		video {
 			position: absolute;
 			top: 0;
@@ -15,12 +15,12 @@
 			object-fit: cover;
 		}
 	}
-
-	@media(max-width: 1199px) {
+	
+	@media (max-width: 1199px) {
 		.container {
 			padding: 0;
 		}
-
+		
 		.video_box {
 			border-radius: 0;
 		}

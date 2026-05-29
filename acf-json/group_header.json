@@ -1,0 +1,32 @@
+{
+	"key": "group_header",
+	"title": "Header",
+	"fields": [
+		{
+			"key": "header_logo",
+			"label": "Header Logo",
+			"name": "header_logo",
+			"type": "image",
+			"return_format": "array",
+			"wrapper": { "width": "50%" }
+		}
+	],
+	"location": [
+		[
+			{
+				"param": "options_page",
+				"operator": "==",
+				"value": "settings_header"
+			}
+		]
+	],
+	"menu_order": 0,
+	"position": "normal",
+	"style": "default",
+	"label_placement": "top",
+	"instruction_placement": "label",
+	"hide_on_screen": "",
+	"active": true,
+	"description": "",
+	"show_in_rest": 0
+}

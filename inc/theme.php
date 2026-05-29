@@ -15,6 +15,7 @@ add_action('after_setup_theme', 'custom_template_register_menus');
 // Editor stylesheet support so block previews match frontend.
 add_action('after_setup_theme', function () {
 	add_theme_support('editor-styles');
+	add_theme_support('title-tag');
 	add_editor_style([
 		'assets/font/fonts.css',
 		'assets/css/global.css',

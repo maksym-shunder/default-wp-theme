@@ -49,7 +49,6 @@ if (file_exists(get_template_directory() . $blockStylesPath)):
 		rel="preload"
 		href="<?= $blockStylesUrl ?>?ver=<?= $ver ?>"
 		as="style"
-		onload="this.rel=`stylesheet`"
 	>
 <?php endif; ?>
 

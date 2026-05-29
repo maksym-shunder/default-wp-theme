@@ -3,19 +3,6 @@
  * Register acf
  *
  */
-add_action('acf/init', 'acf_blocks');
-function acf_blocks()
-{
-	if (!function_exists('acf_add_local_field_group')) {
-		return;
-	}
-
-	// Option pages
-	require_once __DIR__ . '/options-pages-fields/settings-global.php';
-	require_once __DIR__ . '/options-pages-fields/settings-header.php';
-	require_once __DIR__ . '/options-pages-fields/settings-footer.php';
-}
-
 // Register custom block category used by theme block.json files.
 add_filter('block_categories_all', function ($categories) {
 	return array_merge(

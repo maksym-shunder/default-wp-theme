@@ -1,0 +1,38 @@
+{
+	"key": "group_footer",
+	"title": "Footer",
+	"fields": [
+		{
+			"key": "footer_logo",
+			"label": "Footer Logo",
+			"name": "footer_logo",
+			"type": "image",
+			"return_format": "array",
+			"wrapper": { "width": "50%" }
+		},
+		{
+			"key": "footer_copyright",
+			"label": "Footer Copyright",
+			"name": "footer_copyright",
+			"type": "text"
+		}
+	],
+	"location": [
+		[
+			{
+				"param": "options_page",
+				"operator": "==",
+				"value": "settings_footer"
+			}
+		]
+	],
+	"menu_order": 0,
+	"position": "normal",
+	"style": "default",
+	"label_placement": "top",
+	"instruction_placement": "label",
+	"hide_on_screen": "",
+	"active": true,
+	"description": "",
+	"show_in_rest": 0
+}

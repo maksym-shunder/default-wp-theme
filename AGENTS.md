@@ -34,7 +34,7 @@ New top-level module → add `require_once` here.
 | `inc/woocommerce.php` | See WC section. |
 | `inc/acf/acf.php` | Guards `class_exists('ACF')`, requires options pages + block registration. |
 | `inc/acf/options-pages.php` | Registers "Theme Settings" parent + 3 subpages: `global_settings`, `settings_header`, `settings_footer`. |
-| `inc/acf/options-pages-fields/settings-{global,header,footer}.php` | Field defs for the 3 options subpages. Loaded by `acf/init` hook in `acf/acf.php`. |
+| `acf-json/group_{site_settings,header,footer}.json` | Field defs for the 3 options subpages, as ACF Local JSON (no PHP field files). |
 | `inc/acf/registration.php` | `init` hook globs `template-parts/gutenberg-blocks/*/block.json` → `register_block_type()`. `block_categories_all` filter registers `digiway-blocks`. |
 | `acf-json/` | ACF Local JSON sync target. Field group edits in WP admin write back here. |
 | `header.php` / `footer.php` / `index.php` / `404.php` / `home.php` / `single.php` / `page-maintenance.php` | Standard WP. |
@@ -55,6 +55,24 @@ New top-level module → add `require_once` here.
 | `.github/workflows/deploy.yml` | On push to `main`: `node minify.js` → SFTP. Secrets: `SERVER` `USERNAME` `PASSWORD` `PORT` `THEME_PATH`. |
 | `theme.json` | FSE config. |
 | `style.css` | Theme header only. |
+
+## Rules (apply to every agent — Claude Code, Codex, Cursor)
+
+Claude Code loads these as skills/rules automatically. Codex and Cursor must follow the same content — read the linked files before the matching task.
+
+- **Git & PRs** → `.claude/rules/git-operations.md`. Never auto-commit/push/force-push; commit only on explicit request. PR text: no AI-tool mentions, no change stats, no test-plan checklists.
+- **Styles** → `.claude/rules/styles.md`. Native CSS nesting (but see CSS gotcha below); reuse components (`.primary_button`, `.primary_link`, `.container`); minimize `font-family`/`font-size`/`font-weight` when same as global; a color used once or twice → hardcode, used 3+ times → make a `:root` var in `global.css` and replace.
+- **Block creation** → full procedure in `.claude/skills/create-gutenberg-block/SKILL.md`. Codex/Cursor: read that file and follow it step-for-step (it is plain Markdown, no tool needed). Summary in "Block recipe" below.
+
+### Hard conventions (from the skill — do not violate)
+
+- Block root element is always `<section class="<slug>">`. Forward `$block['anchor']` to `id`, merge `$block['className']`.
+- **No root padding/margin** on the block — global vertical rhythm spaces blocks via `--section-space`. Do not add `padding: var(--section-space) 0` per block.
+- **CSS: flat selectors only** (`.slug__el`). Native nesting `&__el` BEM-concat is NOT supported by browsers and silently drops rules — local dev serves raw CSS, postcss only runs on CI. `&` + space/combinator is fine.
+- Buttons/links use the ACF `link` field type (returns `{url,title,target}`), never split `*_label` + `*_url`.
+- Block JS must be wrapped in an IIFE (see `example-block/assets/script.js`) — scripts share global scope across blocks.
+- Image/file fields: guard `if (!empty($x) && is_array($x))` before `$x['url']` or the editor preview crashes.
+- Reuse the globally-enqueued Swiper (`assets/js/swiper.min.js` + `assets/css/swiper.css`) for sliders — no new dep.
 
 ## Block recipe
 
@@ -137,9 +155,9 @@ Slugs `/customer-login` + `/reset-password` MUST exist with login/reset-password
 
 | Subpage slug | Field file | Read pattern |
 |---|---|---|
-| `global_settings` | `inc/acf/options-pages-fields/settings-global.php` | `get_field('<name>', 'option')` |
-| `settings_header` | `inc/acf/options-pages-fields/settings-header.php` | `get_field('<name>', 'option')` |
-| `settings_footer` | `inc/acf/options-pages-fields/settings-footer.php` | `get_field('<name>', 'option')` |
+| `global_settings` | `acf-json/group_site_settings.json` | `get_field('<name>', 'option')` |
+| `settings_header` | `acf-json/group_header.json` | `get_field('<name>', 'option')` |
+| `settings_footer` | `acf-json/group_footer.json` | `get_field('<name>', 'option')` |
 
 Known option keys in use: `maintenance_mode`, `disable_payments`, `header_logo` (`.url`).
 

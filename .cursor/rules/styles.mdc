@@ -1,0 +1,14 @@
+---
+description: CSS / styling rules for the theme
+globs: ["**/*.css", "template-parts/gutenberg-blocks/**/*.php"]
+alwaysApply: false
+---
+
+## Style rules
+
+- Use native CSS nesting, no preprocessors — BUT only `&` followed by a space/combinator. Native browsers do NOT support `&__name` BEM concat; it silently drops the rule (local dev serves raw CSS, postcss only runs on CI). Use flat selectors like `.block__name`.
+- Reuse components: `.primary_button`, `.primary_link`, `.container`. Add a modifier in `global.css` (e.g. `.primary_button--outline`) instead of a new block-local button.
+- Minimize duplicated styles.
+- Minimize `font-family`, `font-size`, `font-weight`. If the same as global styles, omit them.
+- Color used once or twice → hardcode it. Color used three or more times → add a `:root` variable in `assets/css/global.css` and replace the hardcoded uses.
+- Block CSS: no top/bottom padding or margin on the block root — global vertical rhythm (`--section-space`) spaces blocks.

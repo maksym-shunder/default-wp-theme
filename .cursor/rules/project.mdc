@@ -1,0 +1,19 @@
+---
+description: Core project map and conventions for the default-wp-theme WordPress theme
+alwaysApply: true
+---
+
+This is a custom WordPress theme (`default-wp-theme`) with ACF-driven Gutenberg blocks and WooCommerce. Full project map lives in `AGENTS.md` at the theme root — read it for the bootstrap chain, file map, CSS-loading buckets, WooCommerce hooks, and deploy details.
+
+Authoritative rule files (read the one matching your task):
+
+- Git & PRs: `.claude/rules/git-operations.md`
+- Styles: `.claude/rules/styles.md`
+- Gutenberg block creation: `.claude/skills/create-gutenberg-block/SKILL.md`
+
+Hard conventions:
+
+- No build step locally — WordPress consumes PHP/CSS/JS directly. `minify.js` runs only on CI and overwrites source in place; never run it locally on uncommitted work.
+- New top-level module → add a `require_once` in `functions.php`.
+- ACF field groups live as Local JSON in `acf-json/`. Don't write per-block `fields.php` or PHP `acf_add_local_field_group()` calls.
+- Verify PHP with `php -l <file>`. No test/lint/build.

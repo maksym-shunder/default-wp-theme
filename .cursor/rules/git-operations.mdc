@@ -1,0 +1,18 @@
+---
+description: Git and pull-request rules
+alwaysApply: true
+---
+
+## Commit rules
+
+- NEVER create commits automatically — commit only when the user explicitly requests it.
+- NEVER push to remote without an explicit user request.
+- NEVER force-push or run destructive git commands without explicit approval.
+- When changes are ready, inform the user and wait. Show `git diff` / `git status` for review first.
+
+## Pull request descriptions
+
+- NEVER mention AI tools (Claude, Copilot, Gemini, Cursor, Codex, etc.) in PR title or body.
+- NEVER include change statistics (file count, lines added/removed).
+- NEVER add test-plan checklists — there is no QA team to execute them.
+- Keep PR descriptions focused on what changed and why.

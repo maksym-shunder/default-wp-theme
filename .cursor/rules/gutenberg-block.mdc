@@ -1,0 +1,33 @@
+---
+description: How to create an ACF-driven Gutenberg block in this theme. Apply when creating, building, or scaffolding a Gutenberg/ACF/"digiway" block from a Figma link or an image.
+globs: ["template-parts/gutenberg-blocks/**", "acf-json/**"]
+alwaysApply: false
+---
+
+Full step-by-step procedure: `.claude/skills/create-gutenberg-block/SKILL.md`. Read it before scaffolding. Summary:
+
+A block = a folder under `template-parts/gutenberg-blocks/<slug>/` with four files, plus one ACF JSON group. Dropping the folder is enough — `inc/acf/registration.php` globs `block.json` on `init` and calls `register_block_type()`. No PHP registration code.
+
+```
+template-parts/gutenberg-blocks/<slug>/
+  block.json          # apiVersion 2, name "digiway/<slug>", category "digiway-blocks",
+                      # acf: { mode:"preview", blockVersion:3, autoInlineEditing:true, renderTemplate:"render.php" }
+  render.php          # server render
+  assets/style.css    # "style": "file:./assets/style.css"
+  assets/script.js    # optional, "viewScript": "file:./assets/script.js"
+acf-json/group_<slug_underscore>.json   # field group, location bound to block "digiway/<slug>"
+```
+
+Hard conventions:
+
+- Root element is always `<section class="<slug>">`. Forward `$block['anchor']` to `id`, merge `$block['className']`.
+- Read fields with `theme_field()` (not `get_field()`) so editor previews show defaults.
+- Image/file fields: guard `if (!empty($x) && is_array($x))` before `$x['url']`, else the editor preview crashes.
+- Buttons/links use the ACF `link` field type (`{url,title,target}`), never split `*_label` + `*_url`.
+- CSS: flat selectors only (no `&__` concat). No top/bottom padding/margin on the block root (global rhythm handles spacing).
+- Reuse global components (`.primary_button`, `.primary_link`, `.container`) and the globally-enqueued Swiper for sliders.
+- Block JS must be wrapped in an IIFE (see `example-block/assets/script.js`).
+- `apiVersion` stays at 2 — do not bump to 3.
+- Map colors to existing `global.css` vars; only add a new `:root` var when a color appears 3+ times.
+
+Verify: `php -l render.php`, validate the JSON, confirm the block shows under "Digiway Blocks" in the inserter.

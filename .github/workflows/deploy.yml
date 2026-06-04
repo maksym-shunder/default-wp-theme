@@ -1,4 +1,4 @@
-name: 🚀 Deploy to SFTP
+name: 🚀 Deploy to SSH
 
 on:
   push:
@@ -10,19 +10,48 @@ on:
       - main
 
 jobs:
-  sftp-deploy:
+  SSH-deploy:
     if: github.event_name == 'push' || (github.event.pull_request.merged == true)
-    name: Upload via SFTP
+    name: Upload via SSH
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
+      # 🔔 Slack start
+      - name: Notify Slack (start)
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          set -e
+          repo="${{ github.repository }}"
+          branch="${{ github.ref_name }}"
+          actor="${{ github.actor }}"
+          event="${{ github.event_name }}"
+          run_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          sha="${{ github.sha }}"
+          short_sha="$(echo "$sha" | cut -c1-7)"
+          commit_url="${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"
+
+          if [ "$event" = "pull_request" ]; then
+            pr_url="${{ github.event.pull_request.html_url }}"
+            pr_number="${{ github.event.pull_request.number }}"
+            pr_title="${{ github.event.pull_request.title }}"
+            payload=$(printf '{"text":"🟡 DEPLOY Futbolka started\nRepo: %s\nPR: <%s|#%s> %s\nCommit: <%s|%s>\nBy: %s\nRun: %s"}' \
+              "$repo" "$pr_url" "$pr_number" "$pr_title" "$commit_url" "$short_sha" "$actor" "$run_url")
+          else
+            payload=$(printf '{"text":"🟡 DEPLOY Futbolka started\nRepo: %s\nBranch: %s\nCommit: <%s|%s>\nBy: %s\nRun: %s"}' \
+              "$repo" "$branch" "$commit_url" "$short_sha" "$actor" "$run_url")
+          fi
+
+          curl -sS -X POST -H 'Content-type: application/json' --data "$payload" "$SLACK_WEBHOOK_URL"
+
+      # 🟢 Node build
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
 
       - name: Install dependencies
         run: npm install terser postcss postcss-nesting cssnano
@@ -30,13 +59,43 @@ jobs:
       - name: Minify CSS and JS
         run: node minify.js
 
-      - name: Deploy to SFTP
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.5
+      - name: Remove files not needed on server
+        run: rm -rf node_modules .git .github .gitignore package.json package-lock.json
+
+      - name: Upload theme via SCP
+        uses: appleboy/scp-action@v1
         with:
-          server: ${{ secrets.SERVER }}
+          host: ${{ secrets.SERVER }}
           username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-          port: ${{ secrets.PORT }}
-          remote_path: ${{ secrets.THEME_PATH }}
-          delete_remote_files: false
-          rsyncArgs: "--exclude=node_modules --exclude=package.json --exclude=package-lock.json"
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          source: "."
+          target: "${{ secrets.THEME_PATH }}"
+
+
+      # 🟢 Slack success
+      - name: Notify Slack (success)
+        if: success()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          set -e
+          run_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          sha="${{ github.sha }}"
+          short_sha="$(echo "$sha" | cut -c1-7)"
+          commit_url="${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"
+          payload=$(printf '{"text":"🟢 DEPLOY Futbolka SUCCESS\nCommit: <%s|%s>\nRun: %s"}' "$commit_url" "$short_sha" "$run_url")
+          curl -sS -X POST -H 'Content-type: application/json' --data "$payload" "$SLACK_WEBHOOK_URL"
+
+      - name: Notify Slack (failure)
+        if: failure()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          set -e
+          run_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          sha="${{ github.sha }}"
+          short_sha="$(echo "$sha" | cut -c1-7)"
+          commit_url="${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"
+          payload=$(printf '{"text":"🔴 DEPLOY Futbolka FAILED\nCommit: <%s|%s>\nRun: %s"}' "$commit_url" "$short_sha" "$run_url")
+          curl -sS -X POST -H 'Content-type: application/json' --data "$payload" "$SLACK_WEBHOOK_URL"

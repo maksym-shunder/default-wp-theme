@@ -27,11 +27,31 @@ function add_file_types_to_uploads($file_types)
 {
 	$new_filetypes = array();
 	$new_filetypes['svg'] = 'image/svg+xml';
+	$new_filetypes['webp'] = 'image/webp';
 	$file_types = array_merge($file_types, $new_filetypes);
 	return $file_types;
 }
 
 add_filter('upload_mimes', 'add_file_types_to_uploads');
+
+add_filter('image_editor_output_format', function (array $formats): array {
+	$formats['image/jpeg'] = 'image/webp';
+	$formats['image/png'] = 'image/webp';
+
+	return $formats;
+});
+
+add_filter('wp_get_attachment_image_attributes', function (array $attr): array {
+	if (empty($attr['decoding'])) {
+		$attr['decoding'] = 'async';
+	}
+
+	if (empty($attr['loading']) && empty($attr['fetchpriority'])) {
+		$attr['loading'] = 'lazy';
+	}
+
+	return $attr;
+}, 20);
 
 // remove block-library styles
 add_action('wp_enqueue_scripts', function () {

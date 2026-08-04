@@ -1,0 +1,76 @@
+name: 🚀 Deploy via SSH (rsync)
+
+on:
+  push:
+    branches:
+      - main   # прод
+      - dev    # стейджинг
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: 🚀 Deploy
+
+    # main -> PROD, dev -> STAGING (один сервер, разный только путь)
+    env:
+      ENV_NAME: ${{ github.ref_name == 'main' && 'PROD' || 'STAGING' }}
+      SERVER_DIR: ${{ github.ref_name == 'main' && secrets.THEME_PATH || secrets.DEV_THEME_PATH }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install terser postcss postcss-nesting cssnano
+
+      - name: Minify CSS and JS
+        run: node minify.js
+
+      - name: Notify Slack (start)
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          payload=$(printf '{"text":"🟡 DEPLOY NewBornStyle started (%s)\nRepo: %s\nBranch: %s"}' \
+            "$ENV_NAME" "${{ github.repository }}" "${{ github.ref_name }}")
+          curl -sS -X POST -H 'Content-type: application/json' --data "$payload" "$SLACK_WEBHOOK_URL"
+
+      # готовим SSH-ключ и доверяем хосту
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "${{ secrets.SSH_PORT }}" -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
+
+      # rsync = инкрементальная заливка, льются только изменённые файлы
+      - name: Deploy via rsync
+        run: |
+          rsync -avz --no-perms --no-owner --no-group \
+            -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }}" \
+            --exclude='node_modules/' \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='package.json' \
+            --exclude='package-lock.json' \
+            ./ "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${SERVER_DIR}/"
+
+      - name: Notify Slack (result)
+        if: always()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          status="🟡 UNKNOWN"
+          [ "${{ job.status }}" = "success" ] && status="🟢 SUCCESS"
+          [ "${{ job.status }}" = "failure" ] && status="🔴 FAILED"
+          payload=$(printf '{"text":"DEPLOY NewBornStyle %s (%s)\nRepo: %s\nBranch: %s"}' \
+            "$status" "$ENV_NAME" "${{ github.repository }}" "${{ github.ref_name }}")
+          curl -sS -X POST -H 'Content-type: application/json' --data "$payload" "$SLACK_WEBHOOK_URL"

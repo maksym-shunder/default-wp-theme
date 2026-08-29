@@ -1,0 +1,95 @@
+# gitleaks config for default-wp-theme.
+#
+# This is the portable half of .claude/skills/secret-guard/SKILL.md — the part that a
+# scanner can run. Copy it to the repo root as `.gitleaks.toml` when the check moves into
+# a pre-commit hook or GitHub Actions.
+#
+#   pre-commit:  gitleaks protect --staged --config .gitleaks.toml
+#   Actions:     gitleaks/gitleaks-action@v2   (reads .gitleaks.toml automatically)
+#
+# Regexes are Go RE2 — no lookahead or lookbehind. Keep it that way, and keep this file
+# in sync with SKILL.md: a pattern added there should be added here.
+
+title = "default-wp-theme secret rules"
+
+[extend]
+# Pulls in the built-in rules: AWS, Stripe, GitHub, Slack, SendGrid, Mailgun, JWT,
+# private keys, Google API keys and ~150 others. Only theme-specific rules live below.
+useDefault = true
+
+
+# ---------------------------------------------------------------------------
+# Theme-specific rules
+# ---------------------------------------------------------------------------
+
+[[rules]]
+id = "php-define-credential"
+description = "Credential passed to define() in PHP"
+regex = '''define\(\s*['"][A-Z0-9_]*(KEY|SECRET|PASS|TOKEN|SALT)[A-Z0-9_]*['"]\s*,\s*['"][^'"]{6,}['"]'''
+tags = ["php", "wordpress"]
+
+[[rules]]
+id = "generic-assignment"
+description = "Credential-shaped assignment in any language"
+regex = '''(?i)(api[_-]?key|apikey|secret|token|passwd|password|client[_-]?secret|access[_-]?key)\s*[=:]\s*['"][^'"\s]{8,}['"]'''
+tags = ["generic"]
+
+[[rules]]
+id = "auth-header"
+description = "Authorization header with an inline token"
+regex = '''(?i)authorization\s*[:=]\s*['"]?(bearer|basic)\s+[A-Za-z0-9._\-+/=]{16,}'''
+tags = ["generic"]
+
+[[rules]]
+id = "url-with-credentials"
+description = "Connection string carrying user:password"
+regex = '''[a-z][a-z0-9+.-]*://[^/\s:@]+:[^/\s:@]{3,}@'''
+tags = ["generic"]
+
+[[rules]]
+# Path-only rule: flags the file itself, whatever is inside it. A DB dump or a copied
+# wp-config.php leaks more than any single key. Verify path-only rules are supported by
+# the gitleaks version in use; older builds also require a `regex` field.
+id = "forbidden-file"
+description = "File type that must never be committed to the theme"
+path = '''(?i)(\.sql(\.gz)?|\.dump|\.env(\..+)?|wp-config(-.+)?\.php|\.pem|\.key|\.ppk|id_rsa.*|\.p12|\.pfx|\.bak|\.zip|\.tar\.gz|\.ftp-deploy-sync-state\.json|debug\.log|\.log|local-xdebuginfo\.php)$'''
+tags = ["file"]
+
+
+# ---------------------------------------------------------------------------
+# Allowlist — deliberately short.
+#
+# An allowlisted path is a blind spot: every rule stops applying there, including the
+# ones that would catch a real key. So a path earns a place here only if credential-
+# shaped text is expected in it AND a real credential could not plausibly live there.
+#
+# Form markup (templates/, woocommerce/) does NOT qualify: the rules above require a
+# quoted value of 8+ characters after the keyword, so `name="password"` never matches
+# them. Allowlisting those paths would suppress nothing and blind the scanner to real
+# keys in the files that handle authentication. Same for the .md docs — they name the
+# secrets without containing them, and a README is a plausible place for someone to
+# paste a live key into an example config.
+# ---------------------------------------------------------------------------
+
+[allowlist]
+description = "Known-clean paths and references in default-wp-theme"
+
+paths = [
+  # The rule definitions themselves — this file and SKILL.md contain every pattern on
+  # the list as literal text, and more get added as the rules evolve.
+  '''\.claude/.*''',
+  '''\.cursor/.*''',
+  # Minified vendor bundle: long base64-ish runs, never edited by hand, no place for a key.
+  '''assets/js/swiper\.min\.js''',
+]
+
+regexes = [
+  # A reference to a GitHub Secret is not the secret.
+  # NOTE: this intentionally does NOT allowlist .github/*.yml as a path — a literal
+  # value sitting where a ${{ secrets.* }} reference belongs must still be reported.
+  '''\$\{\{\s*secrets\.[A-Z0-9_]+\s*\}\}''',
+]
+
+# Publishable keys are handled per-line, not here: they are legitimate in source, so they
+# carry an inline `gitleaks:allow` comment with a reason, a name and a date. gitleaks
+# honours that comment natively — see SKILL.md step 4c for the required format.

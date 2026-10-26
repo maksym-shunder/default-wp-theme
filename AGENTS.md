@@ -10,12 +10,13 @@ Token-efficient project map for AI agents. Human prose lives in `CLAUDE.md` + `R
 
 ## Bootstrap chain
 `functions.php` → require in order:
-1. `inc/theme.php` — menus, editor styles, SVG uploads, dequeue `wp-block-library*`, first-block helpers.
-2. `inc/acf/acf.php` → `options-pages.php` + `registration.php`.
-3. `inc/enqueue-scripts.php` — `theme_scripts` + editor-iframe assets.
-4. `inc/maintenance-page.php` — creates `/maintenance` on theme activation, redirects non-admins when ACF `maintenance_mode` truthy.
-5. `inc/helpers.php` — `theme_field()`.
-6. `inc/woocommerce.php` — WC hooks (see WC section).
+1. `inc/theme.php` — menus, editor styles, webp uploads, dequeue `wp-block-library*`, first-block helpers.
+2. `inc/security.php` — headers, XML-RPC off, REST users hidden for guests, author archives off, login error masking, SVG upload checks (only `unfiltered_html`).
+3. `inc/acf/acf.php` → `options-pages.php` + `registration.php`.
+4. `inc/enqueue-scripts.php` — `theme_scripts` + editor-iframe assets.
+5. `inc/maintenance-page.php` — creates `/maintenance` on theme activation, redirects non-admins when ACF `maintenance_mode` truthy.
+6. `inc/helpers.php` — `theme_field()`.
+7. `inc/woocommerce.php` — WC hooks (see WC section).
 
 ACF Local JSON wired in `functions.php:3-10` → save/load `acf-json/` at theme root.
 
@@ -26,7 +27,8 @@ New top-level module → add `require_once` here.
 | Path | Purpose |
 |---|---|
 | `functions.php` | Entry. Requires all `inc/*`. ACF JSON path filters. |
-| `inc/theme.php` | Menus, `editor-styles` + `add_editor_style`, SVG mime, dequeue WP block CSS, `get_first_block_name_on_page()`, `get_images_from_first_block_on_page()` (filters first top-level `section/div/article/header/main/footer` for `<img fetchpriority="high">`). |
+| `inc/theme.php` | Menus, `editor-styles` + `add_editor_style`, webp mime, dequeue WP block CSS, `get_first_block_name_on_page()`, `get_images_from_first_block_on_page()` (filters first top-level `section/div/article/header/main/footer` for `<img fetchpriority="high">`). |
+| `inc/security.php` | All hardening. Only place that allows SVG uploads (`unfiltered_html` + `digiway_is_safe_svg_file()`). Prefix `digiway_`. |
 | `inc/enqueue-scripts.php` | `theme_scripts()` → frontend assets. `auto_enqueue_styles()` globs `assets/css/*.css` + one subdir level, skip exclude list. `enqueue_block_editor_assets` hook → editor iframe gets `fonts.css` + `global.css` + `editor.css`. |
 | `inc/preloads.php` | `<link rel="preload">` for critical CSS, first-block CSS, first-block `fetchpriority="high"` images, fonts, JS, jQuery. Included from `header.php`. |
 | `inc/maintenance-page.php` | Creates `/maintenance` page on activation; redirects non-`manage_options` users when ACF option `maintenance_mode` truthy. Skips `is_admin()` + `wp-login.php`. |

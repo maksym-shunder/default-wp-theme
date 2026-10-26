@@ -11,6 +11,8 @@ add_filter('acf/settings/load_json', function ($paths) {
 
 require_once __DIR__ . '/inc/theme.php';
 
+require_once __DIR__ . '/inc/security.php';
+
 require_once __DIR__ . '/inc/acf/acf.php';
 
 require_once __DIR__ . '/inc/enqueue-scripts.php';

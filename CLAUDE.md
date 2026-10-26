@@ -24,7 +24,7 @@ There is no `package.json` checked in; `minify.js` is run by CI, not locally.
 
 ### Bootstrap
 
-`functions.php` is the single entry point. It `require_once`s every module under `inc/` in this order: `theme.php` → `acf/acf.php` → `enqueue-scripts.php` → `maintenance-page.php` → `helpers.php` → `woocommerce.php`. New top-level modules should be added here.
+`functions.php` is the single entry point. It `require_once`s every module under `inc/` in this order: `theme.php` → `security.php` → `acf/acf.php` → `enqueue-scripts.php` → `maintenance-page.php` → `helpers.php` → `woocommerce.php`. New top-level modules should be added here.
 
 ### Gutenberg blocks use block.json + ACF render
 
@@ -60,6 +60,14 @@ This is the most counterintuitive part of the codebase. **Before adding or movin
 3. **First-block CSS:** `inc/preloads.php` calls `get_first_block_name_on_page()` (defined in `inc/theme.php`) and preloads `template-parts/gutenberg-blocks/<name>/assets/style.css` if present. Also preloads any `<img fetchpriority="high">` inside the first top-level section of the post content (see `get_images_from_first_block_on_page()`).
 
 If you add a file to the exclude list in `auto_enqueue_styles()`, you almost always need to add a matching `<link rel="preload">` in `inc/preloads.php` — and vice versa.
+
+### Security hardening
+
+`inc/security.php` holds all hardening and is loaded right after `theme.php`. Functions use the `digiway_` prefix and the `digiway` text domain. It sets security headers, shuts down XML-RPC (`xmlrpc.php` answers 403), disables application passwords, strips discovery links and the WP version from `<head>`, hides the core version in `?ver=`, redirects author archives to home, removes author data from oEmbed, hides `/wp/v2/users*` REST routes from guests, and replaces credential errors on `wp-login.php` with one generic message.
+
+SVG uploads are allowed **only** here, and only for users with `unfiltered_html`. Files are checked with a regex filter (`digiway_is_safe_svg_file()`), which is not a full sanitizer, so do not re-add `svg` to `upload_mimes` in `inc/theme.php` or widen the capability.
+
+The cart quantity AJAX (`woocommerce_update_cart_item`) requires the `digiway_update_cart_item` nonce, passed to JS as `themeCart.nonce`. The action name must not start with `woocommerce`, because WC swaps the guest nonce uid for such actions.
 
 ### Maintenance mode
 

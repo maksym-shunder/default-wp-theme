@@ -69,8 +69,8 @@
 	<?php if (!empty(get_field('header_logo', 'option'))): ?>
 		<div class="header">
 			<img
-				src="<?= get_field('header_logo', 'option')['url'] ?>"
-				alt="<?= get_field('header_logo', 'option')['alt'] ?>"
+				src="<?= esc_url(get_field('header_logo', 'option')['url']) ?>"
+				alt="<?= esc_attr(get_field('header_logo', 'option')['alt']) ?>"
 			>
 		</div>
 	<?php endif; ?>

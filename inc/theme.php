@@ -25,8 +25,8 @@ add_action('after_setup_theme', function () {
 
 function add_file_types_to_uploads($file_types)
 {
+	// SVG is allowed in inc/security.php, only for users with unfiltered_html
 	$new_filetypes = array();
-	$new_filetypes['svg'] = 'image/svg+xml';
 	$new_filetypes['webp'] = 'image/webp';
 	$file_types = array_merge($file_types, $new_filetypes);
 	return $file_types;

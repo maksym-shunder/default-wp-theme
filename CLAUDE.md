@@ -80,7 +80,7 @@ The cart quantity AJAX (`woocommerce_update_cart_item`) requires the `digiway_up
 - Moves the payment block from `woocommerce_checkout_order_review` to `woocommerce_checkout_after_customer_details` (changes checkout layout).
 - Registers cart fragments for `.header__basket` (re-renders `template-parts/components/basket`) and `.widget_shopping_cart_content` (re-renders `woocommerce/cart/mini-cart`).
 - Adds `wp_ajax_woocommerce_update_cart_item` for in-place quantity changes — the frontend handler lives in `assets/js/woocommerce.js`.
-- Redirects login failures to `/customer-login?login=failed` and password-reset attempts to `/reset-password?reset=success|failed`. These slugs must match the pages that use `templates/template-login.php` and `templates/template-reset-password.php`.
+- Redirects login failures to `/customer-login?login=failed` and password-reset attempts to `/reset-password?reset=success` (always `success` for a non-empty login, so accounts can't be enumerated; `failed` only for an empty field; one email per login per minute). These slugs must match the pages that use `templates/template-login.php` and `templates/template-reset-password.php`.
 - The `disable_payments` ACF option flips `woocommerce_is_purchasable` to false globally.
 
 WooCommerce template overrides live under `woocommerce/` and follow standard WC template-hierarchy paths.

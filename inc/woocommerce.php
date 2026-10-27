@@ -74,21 +74,13 @@ add_action('login_form_lostpassword', function () {
 	// One reset email per login per minute
 	$throttle_key = 'digiway_lostpassword_' . md5(strtolower($user_login));
 
-	if (get_transient($throttle_key)) {
-		wp_safe_redirect(home_url('/reset-password?reset=success'));
-		exit;
+	if (!get_transient($throttle_key)) {
+		set_transient($throttle_key, 1, MINUTE_IN_SECONDS);
+		retrieve_password($user_login);
 	}
 
-	set_transient($throttle_key, 1, MINUTE_IN_SECONDS);
-
-	$errors = retrieve_password($user_login);
-
-	if (is_wp_error($errors)) {
-		wp_redirect(home_url('/reset-password?reset=failed'));
-		exit;
-	}
-
-	wp_redirect(home_url('/reset-password?reset=success'));
+	// Same response whether the account exists or not, so logins/emails can't be enumerated
+	wp_safe_redirect(home_url('/reset-password?reset=success'));
 	exit;
 });
 

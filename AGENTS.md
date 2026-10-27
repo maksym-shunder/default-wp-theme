@@ -146,7 +146,7 @@ Block previews must match frontend.
 | 22-30 | Enables Gutenberg for `product` post type. |
 | 34-41 | Adds `show_in_rest` to `product_cat` + `product_tag`. |
 | 45-58 | `woocommerce_add_to_cart_fragments` → `.header__basket` re-renders `template-parts/components/basket`; `.widget_shopping_cart_content` re-renders `woocommerce/cart/mini-cart`. |
-| 61-76 | `login_form_lostpassword` → redirect `/reset-password?reset=success|failed`. |
+| 61-82 | `login_form_lostpassword` → POST only; always `/reset-password?reset=success` for a non-empty login (no account enumeration), `failed` only for empty input; throttled to 1 email/login/min. |
 | 79-89 | `wp_login_failed` → redirect `/customer-login?login=failed` (skips wp-admin referrers). |
 | 91-111 | `wp_ajax(_nopriv)_woocommerce_update_cart_item` → AJAX qty update. Frontend in `assets/js/woocommerce.js`. |
 | 114-116 | Override `woocommerce_order_button_text` → "Place your order". |

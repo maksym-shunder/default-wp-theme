@@ -33,7 +33,7 @@
 
 <link
 	rel="preload"
-	href="<?= get_field('header_logo', 'option')['url'] ?? '' ?>"
+	href="<?= esc_url(get_field('header_logo', 'option')['url'] ?? '') ?>"
 	as="image"
 >
 
@@ -47,7 +47,7 @@ if (file_exists(get_template_directory() . $blockStylesPath)):
 	?>
 	<link
 		rel="preload"
-		href="<?= $blockStylesUrl ?>?ver=<?= $ver ?>"
+		href="<?= esc_url($blockStylesUrl . '?ver=' . $ver) ?>"
 		as="style"
 	>
 <?php endif; ?>
@@ -58,7 +58,7 @@ if (!empty($imagesToPreload)):
 	foreach ($imagesToPreload as $item): ?>
 		<link
 			rel="preload"
-			href="<?= $item ?>"
+			href="<?= esc_url($item) ?>"
 			as="image"
 		>
 	<?php endforeach;

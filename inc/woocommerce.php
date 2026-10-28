@@ -59,19 +59,28 @@ add_filter('woocommerce_add_to_cart_fragments', 'custom_header_add_to_cart_fragm
 
 // reset password page
 add_action('login_form_lostpassword', function () {
-	if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($_POST['user_login'])) {
-		wp_redirect(home_url('/reset-password?reset=failed'));
+	if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+		wp_safe_redirect(home_url('/reset-password'));
 		exit;
 	}
 
-	$errors = retrieve_password();
+	$user_login = isset($_POST['user_login']) ? sanitize_text_field(wp_unslash($_POST['user_login'])) : '';
 
-	if (is_wp_error($errors)) {
-		wp_redirect(home_url('/reset-password?reset=failed'));
+	if ($user_login === '') {
+		wp_safe_redirect(home_url('/reset-password?reset=failed'));
 		exit;
 	}
 
-	wp_redirect(home_url('/reset-password?reset=success'));
+	// One reset email per login per minute
+	$throttle_key = 'digiway_lostpassword_' . md5(strtolower($user_login));
+
+	if (!get_transient($throttle_key)) {
+		set_transient($throttle_key, 1, MINUTE_IN_SECONDS);
+		retrieve_password($user_login);
+	}
+
+	// Same response whether the account exists or not, so logins/emails can't be enumerated
+	wp_safe_redirect(home_url('/reset-password?reset=success'));
 	exit;
 });
 
@@ -90,10 +99,14 @@ add_action('wp_login_failed', 'custom_login_failed_redirect');
 
 function update_cart_item_quantity()
 {
-	$cart_item_key = sanitize_text_field($_POST['cart_item_key']);
-	$new_qty = intval($_POST['new_qty']);
+	if (!check_ajax_referer('digiway_update_cart_item', 'nonce', false)) {
+		wp_send_json_error(['message' => esc_html__('Invalid security token.', 'digiway')], 403);
+	}
 
-	if ($cart_item_key && $new_qty >= 0) {
+	$cart_item_key = isset($_POST['cart_item_key']) ? sanitize_text_field(wp_unslash($_POST['cart_item_key'])) : '';
+	$new_qty = isset($_POST['new_qty']) ? intval($_POST['new_qty']) : -1;
+
+	if ($cart_item_key && $new_qty >= 0 && WC()->cart->get_cart_item($cart_item_key)) {
 		WC()->cart->set_quantity($cart_item_key, $new_qty, true);
 		WC()->cart->calculate_totals();
 	}

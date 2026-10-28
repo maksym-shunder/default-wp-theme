@@ -11,12 +11,12 @@ if ($product_id):
 		?>
 		<div class="product_box">
 			<a
-				href="<?= $product_permalink; ?>"
+				href="<?= esc_url($product_permalink) ?>"
 				class="img_box"
 			>
 				<img
-					src="<?= $image_url ?>"
-					alt="<?= $product_name; ?>"
+					src="<?= esc_url($image_url) ?>"
+					alt="<?= esc_attr($product_name) ?>"
 					class="img_absolute"
 				>
 
@@ -31,10 +31,10 @@ if ($product_id):
 
 			<div class="text_box">
 				<h3 class="text-green-700">
-					<a href="<?= $product_permalink; ?>"><?= $product_name; ?></a>
+					<a href="<?= esc_url($product_permalink) ?>"><?= esc_html($product_name) ?></a>
 				</h3>
 
-				<p><?= $product_price; ?></p>
+				<p><?= wp_kses_post($product_price) ?></p>
 			</div>
 		</div>
 	<?php

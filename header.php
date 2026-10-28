@@ -89,8 +89,8 @@
 					class="site-logo"
 				>
 					<img
-						src="<?= get_field('header_logo', 'option')['url'] ?? '' ?>"
-						alt="<?= get_field('header_logo', 'option')['alt'] ?? '' ?>"
+						src="<?= esc_url(get_field('header_logo', 'option')['url'] ?? '') ?>"
+						alt="<?= esc_attr(get_field('header_logo', 'option')['alt'] ?? '') ?>"
 						fetchpriority="high"
 					>
 				</a>

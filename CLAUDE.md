@@ -24,7 +24,7 @@ There is no `package.json` checked in; `minify.js` is run by CI, not locally.
 
 ### Bootstrap
 
-`functions.php` is the single entry point. It `require_once`s every module under `inc/` in this order: `theme.php` → `acf/acf.php` → `enqueue-scripts.php` → `maintenance-page.php` → `helpers.php` → `woocommerce.php`. New top-level modules should be added here.
+`functions.php` is the single entry point. It `require_once`s every module under `inc/` in this order: `theme.php` → `security.php` → `acf/acf.php` → `enqueue-scripts.php` → `maintenance-page.php` → `helpers.php` → `woocommerce.php`. New top-level modules should be added here.
 
 ### Gutenberg blocks use block.json + ACF render
 
@@ -61,6 +61,14 @@ This is the most counterintuitive part of the codebase. **Before adding or movin
 
 If you add a file to the exclude list in `auto_enqueue_styles()`, you almost always need to add a matching `<link rel="preload">` in `inc/preloads.php` — and vice versa.
 
+### Security hardening
+
+`inc/security.php` holds all hardening and is loaded right after `theme.php`. Functions use the `digiway_` prefix and the `digiway` text domain. It sets security headers, shuts down XML-RPC (`xmlrpc.php` answers 403), disables application passwords, strips discovery links and the WP version from `<head>`, hides the core version in `?ver=`, redirects author archives to home, removes author data from oEmbed, hides `/wp/v2/users*` REST routes from guests, and replaces credential errors on `wp-login.php` with one generic message.
+
+SVG uploads are allowed **only** here, and only for users with `unfiltered_html`. Files are checked with a regex filter (`digiway_is_safe_svg_file()`), which is not a full sanitizer, so do not re-add `svg` to `upload_mimes` in `inc/theme.php` or widen the capability.
+
+The cart quantity AJAX (`woocommerce_update_cart_item`) requires the `digiway_update_cart_item` nonce, passed to JS as `themeCart.nonce`. The action name must not start with `woocommerce`, because WC swaps the guest nonce uid for such actions.
+
 ### Maintenance mode
 
 `inc/maintenance-page.php` creates a `/maintenance` page on theme activation. When the ACF option `maintenance_mode` (Global Settings) is truthy, `template_redirect` sends every non-admin (anyone without `manage_options`) to that page. Admin and `wp-login.php` are excluded.
@@ -72,7 +80,7 @@ If you add a file to the exclude list in `auto_enqueue_styles()`, you almost alw
 - Moves the payment block from `woocommerce_checkout_order_review` to `woocommerce_checkout_after_customer_details` (changes checkout layout).
 - Registers cart fragments for `.header__basket` (re-renders `template-parts/components/basket`) and `.widget_shopping_cart_content` (re-renders `woocommerce/cart/mini-cart`).
 - Adds `wp_ajax_woocommerce_update_cart_item` for in-place quantity changes — the frontend handler lives in `assets/js/woocommerce.js`.
-- Redirects login failures to `/customer-login?login=failed` and password-reset attempts to `/reset-password?reset=success|failed`. These slugs must match the pages that use `templates/template-login.php` and `templates/template-reset-password.php`.
+- Redirects login failures to `/customer-login?login=failed` and password-reset attempts to `/reset-password?reset=success` (always `success` for a non-empty login, so accounts can't be enumerated; `failed` only for an empty field; one email per login per minute). These slugs must match the pages that use `templates/template-login.php` and `templates/template-reset-password.php`.
 - The `disable_payments` ACF option flips `woocommerce_is_purchasable` to false globally.
 
 WooCommerce template overrides live under `woocommerce/` and follow standard WC template-hierarchy paths.

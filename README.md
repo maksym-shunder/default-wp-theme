@@ -191,6 +191,24 @@ The theme overrides the following WooCommerce templates:
 - Cart fragments for updating without page reload
 - Custom redirects after login/logout/password reset
 
+## 🔒 Security
+
+All hardening lives in `inc/security.php`:
+
+- Security headers: `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, HSTS over HTTPS.
+- XML-RPC is off, and `xmlrpc.php` answers 403. Application passwords are off.
+- The WP version and discovery links are removed from `<head>`, and the core version in `?ver=` is replaced with a hash.
+- Author archives redirect to home, oEmbed has no author data, and `/wp-json/wp/v2/users*` is hidden from guests.
+- Failed logins on `wp-login.php` show one generic message.
+- SVG upload is allowed only for users with `unfiltered_html` (admins/editors), and the file is checked for scripts and handlers.
+
+Things a theme cannot do. Set these up on the server:
+
+1. In `wp-config.php`: `define('DISALLOW_FILE_EDIT', true);`
+2. Delete or block `readme.html` and `license.txt` in the WP root.
+3. Block `xmlrpc.php` at server level, e.g. nginx: `location = /xmlrpc.php { deny all; }`
+4. Limit login attempts with a plugin (Limit Login Attempts Reloaded / Wordfence).
+
 ## 📝 If WooCommerce is Not Used
 
 If you are not using WooCommerce, follow these steps:
@@ -495,6 +513,24 @@ gutenberg-blocks/
 - Оновлення кількості товарів у кошику через AJAX
 - Фрагменти кошика для оновлення без перезавантаження сторінки
 - Кастомні редиректи після входу/виходу/скидання пароля
+
+## 🔒 Безпека
+
+Весь захист зібрано в `inc/security.php`:
+
+- Заголовки безпеки: `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, HSTS через HTTPS.
+- XML-RPC вимкнено, `xmlrpc.php` віддає 403. Паролі застосунків вимкнено.
+- З `<head>` прибрано версію WP і discovery-посилання, версію ядра в `?ver=` замінено хешем.
+- Архіви авторів редіректять на головну, oEmbed не віддає автора, `/wp-json/wp/v2/users*` приховано від гостей.
+- Невдалий вхід на `wp-login.php` показує одне загальне повідомлення.
+- Завантаження SVG дозволене лише користувачам з `unfiltered_html` (адміни/редактори), файл перевіряється на скрипти та обробники.
+
+Що не може зробити тема. Налаштуйте на сервері:
+
+1. У `wp-config.php`: `define('DISALLOW_FILE_EDIT', true);`
+2. Видалити або закрити `readme.html` і `license.txt` у корені WP.
+3. Закрити `xmlrpc.php` на рівні сервера, напр. nginx: `location = /xmlrpc.php { deny all; }`
+4. Обмежити спроби входу плагіном (Limit Login Attempts Reloaded / Wordfence).
 
 ## 📝 Якщо немає WooCommerce
 

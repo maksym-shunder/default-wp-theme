@@ -72,6 +72,9 @@ function theme_scripts()
 	wp_enqueue_script('wc-cart-fragments');
 	wp_enqueue_script('wc-add-to-cart');
 	wp_enqueue_script('cart-js', get_template_directory_uri() . '/assets/js/woocommerce.js', ['jquery'], filemtime(get_template_directory() . '/assets/js/woocommerce.js'), true);
+	wp_localize_script('cart-js', 'themeCart', [
+		'nonce' => wp_create_nonce('digiway_update_cart_item'),
+	]);
 }
 
 add_action('wp_enqueue_scripts', 'theme_scripts');

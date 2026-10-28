@@ -3,7 +3,8 @@
 /* Template Name: Sign Up */
 
 if (is_user_logged_in()) {
-	header('Location: /');
+	wp_safe_redirect(home_url('/'));
+	exit;
 }
 
 get_header(); ?>

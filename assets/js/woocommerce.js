@@ -98,7 +98,8 @@
 			let data = {
 				action: 'woocommerce_update_cart_item',
 				cart_item_key: itemKey,
-				new_qty: newQty
+				new_qty: newQty,
+				nonce: window.themeCart ? window.themeCart.nonce : ''
 			}
 
 			// Add class to cart to indicate loading
